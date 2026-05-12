@@ -11,7 +11,7 @@ export default function RepoPage({ repo, readme }: any) {
       <div className="max-w-4xl mx-auto space-y-6">
         <div className="glass p-6 rounded-xl">
           <div className="flex items-center gap-4">
-            <img src={repo.owner.avatar_url} className="h-16 w-16 rounded" />
+            <img src={repo.owner.avatar_url} alt={repo.owner.login} className="h-16 w-16 rounded" />
             <div>
               <h2 className="text-2xl font-bold">{repo.full_name}</h2>
               <p className="text-sm text-slate-300">{repo.description}</p>
