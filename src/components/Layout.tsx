@@ -110,10 +110,28 @@ export const Layout: React.FC<LayoutProps> = ({
                 <div className="h-6 w-6 rounded-lg bg-indigo-600 flex items-center justify-center text-white text-[10px]">⚡</div>
                 <span className="text-sm font-bold text-white tracking-tight">GITHUB PULSE</span>
               </div>
-              <p className="text-xs text-slate-500">Real-time repository analytics & trending insights.</p>
+              <p className="text-xs text-slate-500 font-medium">
+                Built by{' '}
+                <a 
+                  href="https://www.linkedin.com/in/vishesh-sanghvi/" 
+                  target="_blank" 
+                  rel="noreferrer"
+                  className="text-indigo-400 hover:text-indigo-300 transition-colors"
+                >
+                  Vishesh Sanghvi
+                </a>
+              </p>
             </div>
             <div className="text-xs text-slate-500 font-medium">
-              © {new Date().getFullYear()} • Crafted for the open-source community
+              © {new Date().getFullYear()} •{' '}
+              <a 
+                href="https://vishesh-ai.vercel.app/" 
+                target="_blank" 
+                rel="noreferrer"
+                className="hover:text-white transition-colors"
+              >
+                Portfolio
+              </a>
             </div>
             <div className="flex items-center gap-6 text-xs text-slate-500 font-medium">
               <Link href="/trending" className="hover:text-white transition-colors">Trending</Link>
