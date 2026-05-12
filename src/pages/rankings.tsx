@@ -235,14 +235,7 @@ export default function Rankings() {
         )}
       </div>
 
-      {/* Footer note */}
-      <div className="mt-4 text-center text-xs text-slate-600">
-        Data sourced from{' '}
-        <a href="https://github.com/EvanLi/Github-Ranking" target="_blank" rel="noreferrer" className="text-slate-500 hover:text-slate-300 underline transition-colors">
-          Github-Ranking
-        </a>{' '}
-        • Updated regularly
-      </div>
+      <div className="mt-8 h-1" />
     </Layout>
   )
 }

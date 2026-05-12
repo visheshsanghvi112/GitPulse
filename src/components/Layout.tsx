@@ -59,28 +59,29 @@ export const Layout: React.FC<LayoutProps> = ({
           <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-fuchsia-600/10 blur-[120px] animate-pulse" style={{ animationDelay: '1s' }} />
         </div>
 
-        {/* Sticky top nav */}
-        <header className="sticky top-0 z-50 w-full backdrop-blur-md bg-black/20 border-b border-white/[0.05]">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+        {/* Sticky top nav *        <header className="sticky top-0 z-50 w-full backdrop-blur-md bg-black/20 border-b border-white/[0.05]">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 grid grid-cols-2 md:grid-cols-3 items-center">
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-3 group">
-              <div className="h-9 w-9 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-600 flex items-center justify-center text-white shadow-lg group-hover:shadow-indigo-500/40 transition-all duration-300 group-hover:scale-110">
-                <svg viewBox="0 0 24 24" className="h-5 w-5 fill-current">
-                  <path d="M13 10V3L4 14H11V21L20 10H13Z" />
-                </svg>
-              </div>
-              <div className="flex flex-col">
-                <span className="text-sm font-bold tracking-tight text-white leading-none">
-                  GITHUB PULSE
-                </span>
-                <span className="text-[10px] font-medium text-indigo-400/80 tracking-widest uppercase mt-0.5">
-                  Analytics
-                </span>
-              </div>
-            </Link>
+            <div className="flex justify-start">
+              <Link href="/" className="flex items-center gap-3 group">
+                <div className="h-9 w-9 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-600 flex items-center justify-center text-white shadow-lg group-hover:shadow-indigo-500/40 transition-all duration-300 group-hover:scale-110">
+                  <svg viewBox="0 0 24 24" className="h-5 w-5 fill-current">
+                    <path d="M13 10V3L4 14H11V21L20 10H13Z" />
+                  </svg>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-sm font-bold tracking-tight text-white leading-none">
+                    GITHUB PULSE
+                  </span>
+                  <span className="text-[10px] font-medium text-indigo-400/80 tracking-widest uppercase mt-0.5">
+                    Analytics
+                  </span>
+                </div>
+              </Link>
+            </div>
 
-            {/* Nav links */}
-            <nav className="hidden md:flex items-center gap-1">
+            {/* Nav links (Middle Centric) */}
+            <nav className="hidden md:flex items-center justify-center gap-1">
               {navLinks.map(({ href, label }) => {
                 const active = router.pathname === href
                 return (
@@ -99,9 +100,9 @@ export const Layout: React.FC<LayoutProps> = ({
               })}
             </nav>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center justify-end gap-3">
               <a
-                href="https://github.com"
+                href="https://github.com/visheshsanghvi112/GitPulse"
                 target="_blank"
                 rel="noreferrer"
                 className="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold bg-white text-black hover:bg-slate-200 transition-all duration-300 shadow-xl shadow-white/5 hover:scale-105 active:scale-95"
@@ -113,7 +114,7 @@ export const Layout: React.FC<LayoutProps> = ({
               </a>
             </div>
           </div>
-        </header>
+        </header>der>
 
         <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 min-h-[calc(100vh-160px)]">
           {children}
