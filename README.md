@@ -1,8 +1,16 @@
+<p align="center">
+  <img src="public/banner.png" alt="GitPulse Banner" width="100%" style="border-radius: 20px;" />
+</p>
+
 # ⚡ GitPulse: The Open Source Intelligence Layer
 
 Created by [**Vishesh Sanghvi**](https://www.linkedin.com/in/vishesh-sanghvi/) • [Portfolio](https://vishesh-ai.vercel.app/)
 
-![GitPulse Banner](https://img.shields.io/badge/UI-Premium_Glassmorphic-6366f1) ![Engine](https://img.shields.io/badge/Stack-Next.js_15-black) ![Data](https://img.shields.io/badge/Source-GitHub_Search_API-white)
+[![CI](https://github.com/visheshsanghvi112/GitPulse/actions/workflows/ci.yml/badge.svg)](https://github.com/visheshsanghvi112/GitPulse/actions/workflows/ci.yml)
+[![Security](https://github.com/visheshsanghvi112/GitPulse/actions/workflows/security.yml/badge.svg)](https://github.com/visheshsanghvi112/GitPulse/actions/workflows/security.yml)
+![Next.js 15](https://img.shields.io/badge/Next.js-15-black?logo=next.js)
+![Tailwind](https://img.shields.io/badge/Tailwind-3.4-blue?logo=tailwind-css)
+![Framer Motion](https://img.shields.io/badge/Framer_Motion-10-fuchsia?logo=framer)
 
 **GitPulse** is a high-fidelity, real-time intelligence dashboard for the GitHub ecosystem. It provides deep insights into trending repositories, historical rankings, and language distributions through a stunning, motion-driven interface.
 
@@ -15,6 +23,26 @@ Created by [**Vishesh Sanghvi**](https://www.linkedin.com/in/vishesh-sanghvi/) �
 - **📊 Rich Analytics**: Visualized intelligence including language distributions and repository impact charts.
 - **💎 Premium UX**: A meticulously crafted glassmorphic interface with background pulsing glows, spring-based animations, and responsive card layouts.
 - **⚡ Hybrid Architecture**: Intelligent fallback system that switches between Live API data and cached JSON snapshots for zero-downtime reliability.
+- **📈 Scroll Intelligence**: Top-mounted scroll progress indicators and staggering grid animations.
+
+---
+
+## 🏗️ Project Architecture
+
+```mermaid
+graph TD
+    A[User Browser] --> B[Next.js Frontend]
+    B --> C[Live GitHub API]
+    B --> D[Local JSON Snapshots]
+    E[GitHub Actions] --> |Daily Schedule| F[fetchAndStore.js]
+    F --> |Commit| D
+    G[Historical Data] --> |CSV/Markdown| B
+    style A fill:#6366f1,stroke:#fff,stroke-width:2px
+    style B fill:#1e293b,stroke:#fff,stroke-width:2px
+    style E fill:#f43f5e,stroke:#fff,stroke-width:2px
+```
+
+---
 
 ## 🛠️ Technology Stack
 
@@ -23,6 +51,9 @@ Created by [**Vishesh Sanghvi**](https://www.linkedin.com/in/vishesh-sanghvi/) �
 - **Motion**: Framer Motion (Spring physics & staggering)
 - **Analytics**: Recharts (High-performance SVG charts)
 - **Data**: Axios + SWR (Stale-While-Revalidate caching)
+- **Testing**: Vitest + Testing Library
+
+---
 
 ## 🚀 Getting Started
 
@@ -46,12 +77,7 @@ npm run dev
 ```
 Navigate to `http://localhost:3000` to see the pulse of open source.
 
-## 📈 Data Strategy
-
-GitPulse utilizes a sophisticated triple-layered data strategy:
-1. **Primary**: Live GitHub Search API for immediate real-time trending results.
-2. **Secondary**: Local JSON snapshots committed daily via GitHub Actions for lightning-fast loading.
-3. **Tertiary**: Historical rankings data sourced from the `Github-Ranking` dataset for long-term intelligence.
+---
 
 ## 👤 Creator
 
