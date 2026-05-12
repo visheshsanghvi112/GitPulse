@@ -37,7 +37,7 @@ export default function Analytics() {
   const [duration, setDuration] = useState<'today' | 'week' | 'month'>('week')
   const { data, loading } = useSnapshots(duration)
 
-  const items = useMemo(() => data?.items ?? [], [data?.items])
+  const items: any[] = useMemo(() => data?.items ?? [], [data?.items])
 
   // Language distribution
   const langData = useMemo(() => {
