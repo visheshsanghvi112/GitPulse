@@ -30,6 +30,35 @@ const LANG_ICONS: Record<string, string> = {
   forks: '🍴',
 }
 
+const LANG_COLORS: Record<string, string> = {
+  JavaScript: '#f1e05a',
+  TypeScript: '#3178c6',
+  Python: '#3572A5',
+  Go: '#00ADD8',
+  Rust: '#dea584',
+  Java: '#b07219',
+  'C++': '#f34b7d',
+  'C': '#555555',
+  Ruby: '#701516',
+  Swift: '#F05138',
+  Kotlin: '#A97BFF',
+  PHP: '#4F5D95',
+  Dart: '#00B4AB',
+  Scala: '#c22d40',
+  Haskell: '#5e5086',
+  Lua: '#000080',
+  Shell: '#89e051',
+  HTML: '#e34c26',
+  CSS: '#563d7c',
+  R: '#198CE7',
+  MATLAB: '#e16737',
+  CSharp: '#178600',
+  PowerShell: '#012456',
+  Elixir: '#6e4a7e',
+  Clojure: '#db5855',
+  Julia: '#a270ba'
+}
+
 const KNOWN_CATS = [
   'stars', 'forks',
   'Python', 'JavaScript', 'TypeScript', 'Go', 'Rust', 'Java',
@@ -105,7 +134,8 @@ export default function Rankings() {
               {category === cat && (
                 <motion.div
                   layoutId="activeGlow"
-                  className="absolute inset-0 rounded-2xl bg-indigo-500/10 blur-md -z-10"
+                  className="absolute inset-0 rounded-2xl blur-md -z-10"
+                  style={{ backgroundColor: LANG_COLORS[cat] ? `${LANG_COLORS[cat]}40` : 'rgba(99,102,241,0.25)' }}
                   transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
                 />
               )}
@@ -134,9 +164,19 @@ export default function Rankings() {
         </div>
         
         <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.2em] text-slate-600">
-          <div className="h-1 w-1 rounded-full bg-slate-700" />
+          {data?.source === 'live-github-api' ? (
+            <span className="flex items-center gap-1.5 text-emerald-400">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              Live Data
+            </span>
+          ) : data?.source === 'snapshot-fallback' ? (
+            <span className="flex items-center gap-1.5 text-yellow-500">
+              <span className="h-1.5 w-1.5 rounded-full bg-yellow-500" />
+              Cached Snapshot
+            </span>
+          ) : null}
+          {data?.source && <div className="h-1 w-1 rounded-full bg-slate-700" />}
           Showing {items.length} Curated results
-          <div className="h-1 w-1 rounded-full bg-slate-700" />
         </div>
       </div>
 
@@ -212,7 +252,10 @@ export default function Rankings() {
                     {/* Language */}
                     <div className="hidden sm:flex justify-end">
                       {repo.language ? (
-                        <span className="text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full bg-white/5 text-slate-400 border border-white/5">
+                        <span 
+                          className="text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full bg-white/5 border border-white/10"
+                          style={{ color: LANG_COLORS[repo.language] || '#94a3b8' }}
+                        >
                           {repo.language}
                         </span>
                       ) : (
