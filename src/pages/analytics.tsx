@@ -7,18 +7,16 @@ import {
   PieChart, Pie, Legend, ScatterChart, Scatter, ZAxis, CartesianGrid
 } from 'recharts'
 
-// Unified Brand Palette (Indigo -> Violet -> Fuchsia)
-const COLORS = [
-  '#4f46e5', // indigo-600
-  '#6366f1', // indigo-500
-  '#818cf8', // indigo-400
-  '#7c3aed', // violet-600
-  '#8b5cf6', // violet-500
-  '#a78bfa', // violet-400
-  '#c026d3', // fuchsia-600
-  '#d946ef', // fuchsia-500
-  '#e879f9', // fuchsia-400
-  '#9333ea'  // purple-600
+// Ultra-Vibrant Cyberpunk/Synthwave Gradients
+const GRADIENTS = [
+  'url(#gradCyber)',
+  'url(#gradNeon)',
+  'url(#gradSunset)',
+  'url(#gradAurora)',
+  'url(#gradPlasma)',
+  'url(#gradToxic)',
+  'url(#gradGold)',
+  'url(#gradMagic)'
 ]
 
 const DURATIONS = [
@@ -32,15 +30,63 @@ function fmt(n: number) {
   return String(n)
 }
 
+const ChartDefs = () => (
+  <defs>
+    <linearGradient id="gradCyber" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stopColor="#00f2fe" />
+      <stop offset="100%" stopColor="#4facfe" />
+    </linearGradient>
+    <linearGradient id="gradNeon" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stopColor="#ff0844" />
+      <stop offset="100%" stopColor="#ffb199" />
+    </linearGradient>
+    <linearGradient id="gradSunset" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stopColor="#f83600" />
+      <stop offset="100%" stopColor="#f9d423" />
+    </linearGradient>
+    <linearGradient id="gradAurora" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stopColor="#0ba360" />
+      <stop offset="100%" stopColor="#3cba92" />
+    </linearGradient>
+    <linearGradient id="gradPlasma" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stopColor="#c471f5" />
+      <stop offset="100%" stopColor="#fa71cd" />
+    </linearGradient>
+    <linearGradient id="gradToxic" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stopColor="#cc208e" />
+      <stop offset="100%" stopColor="#6713d2" />
+    </linearGradient>
+    <linearGradient id="gradGold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stopColor="#f6d365" />
+      <stop offset="100%" stopColor="#fda085" />
+    </linearGradient>
+    <linearGradient id="gradMagic" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stopColor="#84fab0" />
+      <stop offset="100%" stopColor="#8fd3f4" />
+    </linearGradient>
+    <linearGradient id="barGradient" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stopColor="#00f2fe" />
+      <stop offset="50%" stopColor="#c471f5" />
+      <stop offset="100%" stopColor="#ff0844" />
+    </linearGradient>
+  </defs>
+)
+
 const CustomTooltip = ({ active, payload }: any) => {
   if (!active || !payload?.length) return null
+  const isGradient = payload[0].fill?.startsWith('url')
+  
   return (
-    <div className="bg-black/60 backdrop-blur-2xl px-5 py-4 rounded-2xl text-xs text-white shadow-[0_0_40px_rgba(79,70,229,0.15)] border border-white/10 ring-1 ring-white/5">
-      <div className="font-black text-sm mb-2">{payload[0].payload.name}</div>
-      <div className="text-slate-400 font-medium flex items-center gap-2">
-        <div className="w-2 h-2 rounded-full" style={{ backgroundColor: payload[0].fill || '#818cf8' }} />
-        <span>Count:</span>
-        <span className="text-white font-bold tracking-wider">{fmt(payload[0].value)}</span>
+    <div className="bg-[#050914]/90 backdrop-blur-2xl px-5 py-4 rounded-2xl text-xs text-white shadow-[0_0_50px_rgba(0,242,254,0.15)] border border-white/10 ring-1 ring-white/5 relative overflow-hidden">
+      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#00f2fe] to-[#ff0844]" />
+      <div className="font-black text-sm mb-2 drop-shadow-md">{payload[0].payload.name}</div>
+      <div className="text-slate-300 font-medium flex items-center gap-2">
+        <div 
+          className="w-2.5 h-2.5 rounded-full shadow-[0_0_10px_rgba(255,255,255,0.5)]" 
+          style={{ background: isGradient ? 'linear-gradient(135deg, #00f2fe, #ff0844)' : payload[0].fill }} 
+        />
+        <span>Signal Volume:</span>
+        <span className="text-white font-black tracking-wider text-sm">{fmt(payload[0].value)}</span>
       </div>
     </div>
   )
@@ -90,21 +136,26 @@ export default function Analytics() {
       title="Analytics — GitHub Pulse"
       description="Visualize trending GitHub repository statistics: language distributions, star counts, and fork analytics."
     >
-      <div className="mb-10">
-        <h1 className="text-4xl md:text-5xl font-black text-white mb-2 tracking-tighter">Network <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-cyan-400">Intelligence</span></h1>
-        <p className="text-slate-400 text-sm font-medium">Real-time repository telemetry and language correlations.</p>
+      <div className="mb-10 relative">
+        <div className="absolute -top-20 -left-20 w-64 h-64 bg-[#00f2fe] rounded-full mix-blend-screen filter blur-[128px] opacity-20 animate-pulse" />
+        <div className="absolute -top-20 right-20 w-64 h-64 bg-[#ff0844] rounded-full mix-blend-screen filter blur-[128px] opacity-20 animate-pulse delay-1000" />
+        
+        <h1 className="text-4xl md:text-6xl font-black text-white mb-2 tracking-tighter relative z-10">
+          Pulse <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00f2fe] via-[#c471f5] to-[#ff0844] animate-gradient-x">Telemetry</span>
+        </h1>
+        <p className="text-slate-400 text-sm font-bold tracking-wide relative z-10">DEEP SCAN NETWORK INTELLIGENCE</p>
       </div>
 
       {/* Duration filter */}
-      <div className="flex items-center gap-1 bg-white/[0.03] backdrop-blur-md rounded-xl p-1.5 w-full sm:w-fit overflow-x-auto no-scrollbar mb-10 border border-white/5">
+      <div className="flex items-center gap-1 bg-white/[0.02] backdrop-blur-xl rounded-xl p-1.5 w-full sm:w-fit overflow-x-auto no-scrollbar mb-10 border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.3)]">
         {DURATIONS.map(({ value, label }) => (
           <button
             key={value}
             onClick={() => setDuration(value)}
-            className={`px-5 py-2 rounded-lg text-xs font-bold transition-all whitespace-nowrap ${
+            className={`px-6 py-2 rounded-lg text-xs font-black uppercase tracking-wider transition-all duration-300 whitespace-nowrap ${
               duration === value
-                ? 'bg-white/10 text-white shadow-sm'
-                : 'text-slate-500 hover:text-slate-300 hover:bg-white/[0.02]'
+                ? 'bg-gradient-to-r from-[#00f2fe]/20 to-[#4facfe]/20 text-[#00f2fe] shadow-[inset_0_0_20px_rgba(0,242,254,0.2)] border border-[#00f2fe]/30'
+                : 'text-slate-500 hover:text-white hover:bg-white/[0.05] border border-transparent'
             }`}
           >
             {label}
@@ -119,19 +170,20 @@ export default function Analytics() {
         className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10"
       >
         {[
-          { label: 'Ecosystem Signals', value: loading ? '...' : fmt(data?.total_count || items.length), color: 'from-indigo-400 to-indigo-600' },
-          { label: 'Sample Stars Tracked', value: loading ? '...' : fmt(totalStars), color: 'from-violet-400 to-violet-600' },
-          { label: 'Average Velocity', value: loading ? '...' : fmt(avgStars), color: 'from-purple-400 to-purple-600' },
-          { label: 'Dominant Framework', value: loading ? '...' : topLang, color: 'from-fuchsia-400 to-fuchsia-600' },
+          { label: 'Ecosystem Signals', value: loading ? '...' : fmt(data?.total_count || items.length), color: 'from-[#00f2fe] to-[#4facfe]', glow: 'bg-[#00f2fe]' },
+          { label: 'Sample Stars Tracked', value: loading ? '...' : fmt(totalStars), color: 'from-[#ff0844] to-[#ffb199]', glow: 'bg-[#ff0844]' },
+          { label: 'Average Velocity', value: loading ? '...' : fmt(avgStars), color: 'from-[#f83600] to-[#f9d423]', glow: 'bg-[#f83600]' },
+          { label: 'Dominant Framework', value: loading ? '...' : topLang, color: 'from-[#c471f5] to-[#fa71cd]', glow: 'bg-[#c471f5]' },
         ].map((s) => (
           <motion.div 
             key={s.label} 
-            whileHover={{ scale: 1.02 }}
-            className="p-6 rounded-[2rem] bg-gradient-to-b from-white/[0.04] to-transparent border border-white/[0.05] flex flex-col justify-between backdrop-blur-xl relative overflow-hidden group shadow-2xl"
+            whileHover={{ scale: 1.02, y: -4 }}
+            className="p-6 rounded-[2rem] bg-[#050914]/50 border border-white/10 flex flex-col justify-between backdrop-blur-2xl relative overflow-hidden group shadow-[0_8px_32px_rgba(0,0,0,0.5)]"
           >
-            <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-br ${s.color} opacity-0 group-hover:opacity-10 blur-3xl transition-opacity duration-700`} />
-            <div className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-500 mb-6">{s.label}</div>
-            <div className={`text-4xl font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-br ${s.color}`}>
+            <div className={`absolute top-0 right-0 w-40 h-40 ${s.glow} opacity-0 group-hover:opacity-20 blur-[64px] transition-opacity duration-700`} />
+            <div className={`absolute -inset-px bg-gradient-to-r ${s.color} rounded-[2rem] opacity-0 group-hover:opacity-30 transition-opacity duration-500 blur-md`} />
+            <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-6 relative z-10">{s.label}</div>
+            <div className={`text-4xl md:text-5xl font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-br ${s.color} relative z-10 drop-shadow-lg`}>
               {s.value}
             </div>
           </motion.div>
@@ -144,28 +196,23 @@ export default function Analytics() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="bg-white/[0.02] border border-white/[0.05] backdrop-blur-2xl rounded-[2rem] p-6 sm:p-8 relative overflow-hidden"
+          className="bg-[#050914]/60 border border-white/10 backdrop-blur-3xl rounded-[2rem] p-6 sm:p-8 relative overflow-hidden shadow-[0_16px_64px_rgba(0,0,0,0.5)]"
         >
-          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-indigo-500 to-violet-500 opacity-50" />
-          <h2 className="text-xs font-black uppercase tracking-[0.2em] text-slate-500 mb-8">Top Repositories by Star Velocity</h2>
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#00f2fe] via-[#c471f5] to-[#ff0844]" />
+          <h2 className="text-xs font-black uppercase tracking-[0.2em] text-[#00f2fe] mb-8 drop-shadow-[0_0_8px_rgba(0,242,254,0.8)]">Top Repositories by Star Velocity</h2>
           
           {loading ? (
-            <div className="h-64 flex items-center justify-center text-slate-500 text-sm font-medium">Calibrating telemetry…</div>
+            <div className="h-64 flex items-center justify-center text-[#c471f5] text-sm font-black uppercase tracking-widest animate-pulse">Calibrating telemetry…</div>
           ) : topRepos.length === 0 ? (
-            <div className="h-64 flex items-center justify-center text-slate-500 text-sm font-medium">No signals detected</div>
+            <div className="h-64 flex items-center justify-center text-slate-600 text-sm font-black uppercase tracking-widest">No signals detected</div>
           ) : (
             <ResponsiveContainer width="100%" height={280}>
               <BarChart data={topRepos} layout="vertical" margin={{ left: 0, right: 20, top: 0, bottom: 0 }}>
-                <defs>
-                  <linearGradient id="barGradient" x1="0" y1="0" x2="1" y2="0">
-                    <stop offset="0%" stopColor="#4f46e5" />
-                    <stop offset="100%" stopColor="#c084fc" />
-                  </linearGradient>
-                </defs>
+                <ChartDefs />
                 <XAxis type="number" hide />
-                <YAxis type="category" dataKey="name" width={110} tick={{ fill: '#64748b', fontSize: 10, fontWeight: 700 }} axisLine={false} tickLine={false} />
+                <YAxis type="category" dataKey="name" width={110} tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 800 }} axisLine={false} tickLine={false} />
                 <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(255,255,255,0.02)' }} />
-                <Bar dataKey="stars" radius={[0, 4, 4, 0]} fill="url(#barGradient)" barSize={14} />
+                <Bar dataKey="stars" radius={[0, 4, 4, 0]} fill="url(#barGradient)" barSize={16} />
               </BarChart>
             </ResponsiveContainer>
           )}
@@ -176,18 +223,19 @@ export default function Analytics() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="bg-white/[0.02] border border-white/[0.05] backdrop-blur-2xl rounded-[2rem] p-6 sm:p-8 relative overflow-hidden"
+          className="bg-[#050914]/60 border border-white/10 backdrop-blur-3xl rounded-[2rem] p-6 sm:p-8 relative overflow-hidden shadow-[0_16px_64px_rgba(0,0,0,0.5)]"
         >
-          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-violet-500 to-fuchsia-500 opacity-50" />
-          <h2 className="text-xs font-black uppercase tracking-[0.2em] text-slate-500 mb-8">Ecosystem Distribution Matrix</h2>
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#ff0844] via-[#fa71cd] to-[#0ba360]" />
+          <h2 className="text-xs font-black uppercase tracking-[0.2em] text-[#ff0844] mb-8 drop-shadow-[0_0_8px_rgba(255,8,68,0.8)]">Ecosystem Distribution Matrix</h2>
           
           {loading ? (
-            <div className="h-64 flex items-center justify-center text-slate-500 text-sm font-medium">Calibrating telemetry…</div>
+            <div className="h-64 flex items-center justify-center text-[#fa71cd] text-sm font-black uppercase tracking-widest animate-pulse">Calibrating telemetry…</div>
           ) : langData.length === 0 ? (
-            <div className="h-64 flex items-center justify-center text-slate-500 text-sm font-medium">No signals detected</div>
+            <div className="h-64 flex items-center justify-center text-slate-600 text-sm font-black uppercase tracking-widest">No signals detected</div>
           ) : (
             <ResponsiveContainer width="100%" height={280}>
               <PieChart>
+                <ChartDefs />
                 <Pie
                   data={langData}
                   dataKey="value"
@@ -195,21 +243,21 @@ export default function Analytics() {
                   cx="50%"
                   cy="50%"
                   outerRadius={100}
-                  innerRadius={75}
-                  paddingAngle={4}
-                  stroke="rgba(0,0,0,0.2)"
-                  strokeWidth={4}
-                  cornerRadius={6}
+                  innerRadius={70}
+                  paddingAngle={6}
+                  stroke="rgba(5,9,20,1)"
+                  strokeWidth={6}
+                  cornerRadius={8}
                 >
                   {langData.map((_, i) => (
-                    <Cell key={i} fill={COLORS[i % COLORS.length]} />
+                    <Cell key={i} fill={GRADIENTS[i % GRADIENTS.length]} />
                   ))}
                 </Pie>
                 <Tooltip content={<CustomTooltip />} />
                 <Legend
-                  formatter={(val) => <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{val}</span>}
+                  formatter={(val) => <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest ml-1">{val}</span>}
                   iconType="circle"
-                  iconSize={6}
+                  iconSize={8}
                 />
               </PieChart>
             </ResponsiveContainer>
@@ -222,25 +270,26 @@ export default function Analytics() {
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
-        className="bg-white/[0.02] border border-white/[0.05] backdrop-blur-2xl rounded-[2rem] p-6 sm:p-8 mb-6 relative overflow-hidden"
+        className="bg-[#050914]/60 border border-white/10 backdrop-blur-3xl rounded-[2rem] p-6 sm:p-8 mb-6 relative overflow-hidden shadow-[0_16px_64px_rgba(0,0,0,0.5)]"
       >
-        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-fuchsia-500 to-indigo-500 opacity-50" />
-        <h2 className="text-xs font-black uppercase tracking-[0.2em] text-slate-500 mb-8">Engagement Scatter Vector (Stars vs Forks)</h2>
+        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#0ba360] to-[#3cba92]" />
+        <h2 className="text-xs font-black uppercase tracking-[0.2em] text-[#0ba360] mb-8 drop-shadow-[0_0_8px_rgba(11,163,96,0.8)]">Engagement Scatter Vector (Stars vs Forks)</h2>
         
         {loading ? (
-          <div className="h-72 flex items-center justify-center text-slate-500 text-sm font-medium">Calibrating telemetry…</div>
+          <div className="h-72 flex items-center justify-center text-[#3cba92] text-sm font-black uppercase tracking-widest animate-pulse">Calibrating telemetry…</div>
         ) : scatterData.length === 0 ? (
-          <div className="h-72 flex items-center justify-center text-slate-500 text-sm font-medium">No signals detected</div>
+          <div className="h-72 flex items-center justify-center text-slate-600 text-sm font-black uppercase tracking-widest">No signals detected</div>
         ) : (
           <ResponsiveContainer width="100%" height={320}>
             <ScatterChart margin={{ top: 10, right: 30, bottom: 20, left: 10 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.03)" vertical={false} />
+              <ChartDefs />
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
               <XAxis 
                 type="number" 
                 dataKey="x" 
                 name="Stars" 
-                tick={{ fill: '#475569', fontSize: 10, fontWeight: 700 }} 
-                axisLine={{ stroke: 'rgba(255,255,255,0.05)' }} 
+                tick={{ fill: '#64748b', fontSize: 10, fontWeight: 800 }} 
+                axisLine={{ stroke: 'rgba(255,255,255,0.1)' }} 
                 tickLine={false}
                 tickFormatter={(val) => fmt(val)}
                 domain={['auto', 'auto']}
@@ -249,8 +298,8 @@ export default function Analytics() {
                 type="number" 
                 dataKey="y" 
                 name="Forks" 
-                tick={{ fill: '#475569', fontSize: 10, fontWeight: 700 }} 
-                axisLine={{ stroke: 'rgba(255,255,255,0.05)' }} 
+                tick={{ fill: '#64748b', fontSize: 10, fontWeight: 800 }} 
+                axisLine={{ stroke: 'rgba(255,255,255,0.1)' }} 
                 tickLine={false}
                 tickFormatter={(val) => fmt(val)}
               />
@@ -261,17 +310,18 @@ export default function Analytics() {
                   if (active && payload && payload.length) {
                     const data = payload[0].payload;
                     return (
-                      <div className="bg-black/60 backdrop-blur-2xl px-5 py-4 rounded-2xl text-xs text-slate-200 shadow-[0_0_40px_rgba(139,92,246,0.15)] border border-violet-500/20 ring-1 ring-white/5">
-                        <div className="font-black text-sm mb-3 text-white tracking-wide">{data.name}</div>
+                      <div className="bg-[#050914]/90 backdrop-blur-2xl px-5 py-4 rounded-2xl text-xs text-white shadow-[0_0_50px_rgba(11,163,96,0.2)] border border-[#0ba360]/30 ring-1 ring-white/5 relative overflow-hidden">
+                        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#0ba360] to-[#3cba92]" />
+                        <div className="font-black text-sm mb-3 text-white tracking-wide drop-shadow-md">{data.name}</div>
                         <div className="flex items-center justify-between gap-6">
                           <div className="flex flex-col">
                             <span className="text-[9px] uppercase tracking-[0.2em] text-slate-500 font-bold mb-1">Stars</span>
-                            <span className="text-indigo-400 font-black text-sm">{fmt(data.x)}</span>
+                            <span className="text-[#00f2fe] font-black text-sm drop-shadow-[0_0_4px_rgba(0,242,254,0.5)]">{fmt(data.x)}</span>
                           </div>
                           <div className="h-6 w-px bg-white/10" />
                           <div className="flex flex-col">
                             <span className="text-[9px] uppercase tracking-[0.2em] text-slate-500 font-bold mb-1">Forks</span>
-                            <span className="text-fuchsia-400 font-black text-sm">{fmt(data.y)}</span>
+                            <span className="text-[#ff0844] font-black text-sm drop-shadow-[0_0_4px_rgba(255,8,68,0.5)]">{fmt(data.y)}</span>
                           </div>
                         </div>
                       </div>
@@ -282,7 +332,7 @@ export default function Analytics() {
               />
               <Scatter name="Repos" data={scatterData}>
                 {scatterData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill="#8b5cf6" opacity={0.6} stroke="#e2e8f0" strokeWidth={1} />
+                  <Cell key={`cell-${index}`} fill="url(#gradMagic)" opacity={0.8} stroke="#ffffff" strokeWidth={0.5} />
                 ))}
               </Scatter>
             </ScatterChart>
@@ -292,11 +342,10 @@ export default function Analytics() {
 
       {/* Snapshot info */}
       {data?.date && (
-        <div className="mt-8 text-center text-[10px] font-bold uppercase tracking-[0.2em] text-slate-600">
-          Telemetry Captured: <span className="text-slate-400">{data.date}</span>
+        <div className="mt-8 text-center text-[10px] font-black uppercase tracking-[0.2em] text-slate-600">
+          Telemetry Captured: <span className="text-[#00f2fe]">{data.date}</span>
         </div>
       )}
     </Layout>
   )
 }
-
