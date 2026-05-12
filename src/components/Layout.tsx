@@ -2,6 +2,7 @@ import React from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { motion, useScroll, useSpring } from 'framer-motion'
 
 interface LayoutProps {
   children: React.ReactNode
@@ -15,6 +16,12 @@ export const Layout: React.FC<LayoutProps> = ({
   description = 'Discover the most starred and trending GitHub repositories with beautiful analytics and real-time insights.'
 }) => {
   const router = useRouter()
+  const { scrollYProgress } = useScroll()
+  const scaleX = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001
+  })
 
   const navLinks = [
     { href: '/', label: 'Home' },
@@ -34,11 +41,20 @@ export const Layout: React.FC<LayoutProps> = ({
         <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>" />
       </Head>
 
+      <motion.div 
+        className="fixed top-0 left-0 right-0 h-[2px] bg-indigo-500 origin-left z-[100]" 
+        style={{ scaleX }} 
+      />
+
       <div className="min-h-screen w-full relative selection:bg-indigo-500/30">
         {/* Background Texture & Glows */}
         <div className="fixed inset-0 pointer-events-none z-0">
           <div className="absolute inset-0 bg-[#080c14]" />
           <div className="absolute inset-0 opacity-[0.03] bg-[url('https://grainy-gradients.vercel.app/noise.svg')] brightness-100 contrast-150" />
+          
+          {/* Tech Grid Pattern */}
+          <div className="absolute inset-0 opacity-[0.15]" style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, rgba(255,255,255,0.05) 1px, transparent 0)', backgroundSize: '40px 40px' }} />
+          
           <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-indigo-600/10 blur-[120px] animate-pulse" />
           <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-fuchsia-600/10 blur-[120px] animate-pulse" style={{ animationDelay: '1s' }} />
         </div>

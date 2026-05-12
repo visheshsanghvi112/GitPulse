@@ -70,6 +70,29 @@ export default function Home() {
           </div>
         </motion.div>
 
+        {/* Live Ticker */}
+        <div className="mt-24 w-full overflow-hidden whitespace-nowrap relative">
+          <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-[#080c14] to-transparent z-10" />
+          <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-[#080c14] to-transparent z-10" />
+          <motion.div 
+            animate={{ x: [0, -1000] }}
+            transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
+            className="inline-flex gap-12 items-center text-[10px] font-black uppercase tracking-[0.3em] text-slate-800"
+          >
+            {[
+              "Real-time Data Streaming", "Snapshot Sync: 100%", "API Status: Healthy", 
+              "Trending Repos Identified: 842", "Analytics Engine: Active",
+              "Real-time Data Streaming", "Snapshot Sync: 100%", "API Status: Healthy", 
+              "Trending Repos Identified: 842", "Analytics Engine: Active"
+            ].map((text, i) => (
+              <span key={i} className="flex items-center gap-3">
+                <span className="h-1.5 w-1.5 rounded-full bg-indigo-500/30" />
+                {text}
+              </span>
+            ))}
+          </motion.div>
+        </div>
+
         {/* Abstract Background Elements */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full pointer-events-none overflow-hidden -z-10">
           <div className="absolute top-[20%] left-[10%] w-[500px] h-[500px] bg-indigo-600/10 blur-[150px] rounded-full" />

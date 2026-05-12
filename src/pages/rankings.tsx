@@ -96,12 +96,19 @@ export default function Rankings() {
             <button
               key={cat}
               onClick={() => setCategory(cat)}
-              className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl text-xs font-bold whitespace-nowrap transition-all duration-300 ${
+              className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl text-xs font-bold whitespace-nowrap transition-all duration-300 relative ${
                 category === cat
-                  ? 'bg-white text-black shadow-xl shadow-white/5'
+                  ? 'bg-white text-black shadow-2xl shadow-indigo-500/40'
                   : 'bg-white/5 text-slate-500 hover:text-white hover:bg-white/10 border border-white/5'
               }`}
             >
+              {category === cat && (
+                <motion.div
+                  layoutId="activeGlow"
+                  className="absolute inset-0 rounded-2xl bg-indigo-500/10 blur-md -z-10"
+                  transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
+                />
+              )}
               <span className="text-lg leading-none">{LANG_ICONS[cat] ?? '📦'}</span>
               {DISPLAY_NAMES[cat] ?? cat}
             </button>

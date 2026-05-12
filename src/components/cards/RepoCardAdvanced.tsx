@@ -17,6 +17,21 @@ type Repo = {
   pushed_at?: string
 }
 
+const LANG_COLORS: Record<string, string> = {
+  JavaScript: '#f1e05a',
+  TypeScript: '#3178c6',
+  Python: '#3572A5',
+  Go: '#00ADD8',
+  Rust: '#dea584',
+  Java: '#b07219',
+  'C++': '#f34b7d',
+  Swift: '#F05138',
+  PHP: '#4F5D95',
+  Ruby: '#701516',
+  HTML: '#e34c26',
+  CSS: '#563d7c',
+}
+
 function fmt(n: number) {
   if (n >= 1000) return `${(n / 1000).toFixed(1)}k`
   return String(n)
@@ -109,10 +124,18 @@ export const RepoCardAdvanced: React.FC<{ repo?: Repo; skeleton?: boolean }> = (
                 {fmt(forks)}
               </span>
 
-              {repo.language && <Badge>{repo.language}</Badge>}
+              {repo.language && (
+                <div className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-white/5 border border-white/5">
+                  <span 
+                    className="h-2 w-2 rounded-full" 
+                    style={{ backgroundColor: LANG_COLORS[repo.language] || '#8b949e' }}
+                  />
+                  <span className="text-[10px] font-bold text-slate-300 uppercase tracking-wider">{repo.language}</span>
+                </div>
+              )}
 
               {updatedAt && (
-                <span className="ml-auto text-[10px] text-slate-500">{updatedAt}</span>
+                <span className="ml-auto text-[10px] text-slate-500 font-medium">{updatedAt}</span>
               )}
             </div>
           </div>
