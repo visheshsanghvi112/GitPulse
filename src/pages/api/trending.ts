@@ -45,8 +45,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
       const sinceStr = since.toISOString().split('T')[0]
 
-      // Build query: recently created AND sorted by stars = "trending"
-      let qstr = `created:>${sinceStr} stars:>10`
+      // Build query: active repositories with high star counts
+      let qstr = `pushed:>${sinceStr} stars:>500`
       if (language) qstr += ` language:${language}`
       if (q) qstr += ` ${q}`
 

@@ -30,47 +30,7 @@ function fmt(n: number) {
   return String(n)
 }
 
-const ChartDefs = () => (
-  <defs>
-    <linearGradient id="gradCyber" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stopColor="#00f2fe" />
-      <stop offset="100%" stopColor="#4facfe" />
-    </linearGradient>
-    <linearGradient id="gradNeon" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stopColor="#ff0844" />
-      <stop offset="100%" stopColor="#ffb199" />
-    </linearGradient>
-    <linearGradient id="gradSunset" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stopColor="#f83600" />
-      <stop offset="100%" stopColor="#f9d423" />
-    </linearGradient>
-    <linearGradient id="gradAurora" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stopColor="#0ba360" />
-      <stop offset="100%" stopColor="#3cba92" />
-    </linearGradient>
-    <linearGradient id="gradPlasma" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stopColor="#c471f5" />
-      <stop offset="100%" stopColor="#fa71cd" />
-    </linearGradient>
-    <linearGradient id="gradToxic" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stopColor="#cc208e" />
-      <stop offset="100%" stopColor="#6713d2" />
-    </linearGradient>
-    <linearGradient id="gradGold" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stopColor="#f6d365" />
-      <stop offset="100%" stopColor="#fda085" />
-    </linearGradient>
-    <linearGradient id="gradMagic" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stopColor="#84fab0" />
-      <stop offset="100%" stopColor="#8fd3f4" />
-    </linearGradient>
-    <linearGradient id="barGradient" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0%" stopColor="#00f2fe" />
-      <stop offset="50%" stopColor="#c471f5" />
-      <stop offset="100%" stopColor="#ff0844" />
-    </linearGradient>
-  </defs>
-)
+
 
 const CustomTooltip = ({ active, payload }: any) => {
   if (!active || !payload?.length) return null
@@ -136,6 +96,48 @@ export default function Analytics() {
       title="Analytics — GitHub Pulse"
       description="Visualize trending GitHub repository statistics: language distributions, star counts, and fork analytics."
     >
+      <svg width="0" height="0" style={{ position: 'absolute' }}>
+        <defs>
+          <linearGradient id="gradCyber" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="#00f2fe" />
+            <stop offset="100%" stopColor="#4facfe" />
+          </linearGradient>
+          <linearGradient id="gradNeon" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="#ff0844" />
+            <stop offset="100%" stopColor="#ffb199" />
+          </linearGradient>
+          <linearGradient id="gradSunset" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="#f83600" />
+            <stop offset="100%" stopColor="#f9d423" />
+          </linearGradient>
+          <linearGradient id="gradAurora" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="#0ba360" />
+            <stop offset="100%" stopColor="#3cba92" />
+          </linearGradient>
+          <linearGradient id="gradPlasma" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="#c471f5" />
+            <stop offset="100%" stopColor="#fa71cd" />
+          </linearGradient>
+          <linearGradient id="gradToxic" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="#cc208e" />
+            <stop offset="100%" stopColor="#6713d2" />
+          </linearGradient>
+          <linearGradient id="gradGold" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="#f6d365" />
+            <stop offset="100%" stopColor="#fda085" />
+          </linearGradient>
+          <linearGradient id="gradMagic" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="#84fab0" />
+            <stop offset="100%" stopColor="#8fd3f4" />
+          </linearGradient>
+          <linearGradient id="barGradient" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="#00f2fe" />
+            <stop offset="50%" stopColor="#c471f5" />
+            <stop offset="100%" stopColor="#ff0844" />
+          </linearGradient>
+        </defs>
+      </svg>
+
       <div className="mb-10 relative">
         <div className="absolute -top-20 -left-20 w-64 h-64 bg-[#00f2fe] rounded-full mix-blend-screen filter blur-[128px] opacity-20 animate-pulse" />
         <div className="absolute -top-20 right-20 w-64 h-64 bg-[#ff0844] rounded-full mix-blend-screen filter blur-[128px] opacity-20 animate-pulse delay-1000" />
@@ -208,7 +210,6 @@ export default function Analytics() {
           ) : (
             <ResponsiveContainer width="100%" height={280}>
               <BarChart data={topRepos} layout="vertical" margin={{ left: 0, right: 20, top: 0, bottom: 0 }}>
-                <ChartDefs />
                 <XAxis type="number" hide />
                 <YAxis type="category" dataKey="name" width={110} tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 800 }} axisLine={false} tickLine={false} />
                 <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(255,255,255,0.02)' }} />
@@ -235,7 +236,6 @@ export default function Analytics() {
           ) : (
             <ResponsiveContainer width="100%" height={280}>
               <PieChart>
-                <ChartDefs />
                 <Pie
                   data={langData}
                   dataKey="value"
@@ -282,7 +282,6 @@ export default function Analytics() {
         ) : (
           <ResponsiveContainer width="100%" height={320}>
             <ScatterChart margin={{ top: 10, right: 30, bottom: 20, left: 10 }}>
-              <ChartDefs />
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
               <XAxis 
                 type="number" 
