@@ -183,11 +183,11 @@ export default function Rankings() {
       {/* Table */}
       <div className="bg-white/[0.01] border border-white/[0.05] rounded-[2.5rem] overflow-hidden backdrop-blur-sm shadow-2xl">
         {/* Table header */}
-        <div className="grid grid-cols-[60px_1fr_100px_100px_120px] gap-4 px-8 py-5 border-b border-white/[0.05] text-[10px] text-slate-500 font-black uppercase tracking-[0.2em]">
-          <div>Rank</div>
+        <div className="grid grid-cols-[30px_1fr_60px] sm:grid-cols-[60px_1fr_100px_100px_120px] gap-3 sm:gap-4 px-4 sm:px-8 py-4 sm:py-5 border-b border-white/[0.05] text-[9px] sm:text-[10px] text-slate-500 font-black uppercase tracking-[0.2em]">
+          <div>#</div>
           <div>Project Architecture</div>
           <div className="text-right">Stars</div>
-          <div className="text-right">Forks</div>
+          <div className="text-right hidden sm:block">Forks</div>
           <div className="text-right hidden sm:block">Ecosystem</div>
         </div>
 
@@ -196,15 +196,15 @@ export default function Rankings() {
           <AnimatePresence mode="wait">
             {isLoading
               ? Array.from({ length: 15 }).map((_, i) => (
-                  <div key={i} className="grid grid-cols-[60px_1fr_100px_100px_120px] gap-4 px-8 py-5 items-center">
-                    <div className="h-4 w-8 skeleton-shimmer rounded" />
+                  <div key={i} className="grid grid-cols-[30px_1fr_60px] sm:grid-cols-[60px_1fr_100px_100px_120px] gap-3 sm:gap-4 px-4 sm:px-8 py-4 sm:py-5 items-center">
+                    <div className="h-4 w-6 skeleton-shimmer rounded" />
                     <div className="space-y-1.5">
-                      <div className="h-3.5 w-48 skeleton-shimmer rounded" />
-                      <div className="h-3 w-72 skeleton-shimmer rounded" />
+                      <div className="h-3.5 w-32 sm:w-48 skeleton-shimmer rounded" />
+                      <div className="h-3 w-48 sm:w-72 skeleton-shimmer rounded" />
                     </div>
-                    <div className="h-4 w-12 skeleton-shimmer rounded ml-auto" />
-                    <div className="h-4 w-10 skeleton-shimmer rounded" />
-                    <div className="h-5 w-16 skeleton-shimmer rounded hidden sm:block" />
+                    <div className="h-4 w-8 sm:w-12 skeleton-shimmer rounded ml-auto" />
+                    <div className="h-4 w-10 skeleton-shimmer rounded hidden sm:block" />
+                    <div className="h-5 w-16 skeleton-shimmer rounded hidden sm:block ml-auto" />
                   </div>
                 ))
               : items.map((repo: any, i: number) => (
@@ -216,7 +216,7 @@ export default function Rankings() {
                     initial={{ opacity: 0, x: -8 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.25, delay: Math.min(i * 0.02, 0.4) }}
-                    className="grid grid-cols-[60px_1fr_100px_100px_120px] gap-4 px-8 py-6 items-center hover:bg-white/[0.03] transition-colors group"
+                    className="grid grid-cols-[30px_1fr_60px] sm:grid-cols-[60px_1fr_100px_100px_120px] gap-3 sm:gap-4 px-4 sm:px-8 py-4 sm:py-6 items-center hover:bg-white/[0.03] transition-colors group"
                   >
                     {/* Rank */}
                     <div className={`text-lg font-black tracking-tighter tabular-nums ${
@@ -244,7 +244,7 @@ export default function Rankings() {
                     </div>
 
                     {/* Forks */}
-                    <div className="text-right">
+                    <div className="text-right hidden sm:block">
                       <div className="text-xs font-bold text-slate-400 tabular-nums">{fmt(repo.forks)}</div>
                       <div className="text-[9px] font-black uppercase tracking-widest text-slate-700">Forks</div>
                     </div>

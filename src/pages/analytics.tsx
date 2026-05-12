@@ -76,7 +76,7 @@ export default function Analytics() {
       </div>
 
       {/* Duration filter */}
-      <div className="flex items-center gap-1 glass rounded-xl p-1 w-fit mb-8">
+      <div className="flex items-center gap-1 glass rounded-xl p-1 w-full sm:w-fit overflow-x-auto no-scrollbar mb-8">
         {DURATIONS.map(({ value, label }) => (
           <button
             key={value}

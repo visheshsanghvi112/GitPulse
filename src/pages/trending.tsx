@@ -45,13 +45,13 @@ export default function Trending() {
       </div>
 
       {/* Filters Section */}
-      <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-12 p-6 rounded-[2rem] bg-white/[0.02] border border-white/[0.05] backdrop-blur-xl">
-        <div className="flex items-center gap-1.5 p-1.5 bg-black/40 rounded-2xl border border-white/5">
+      <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-12 p-4 sm:p-6 rounded-[2rem] bg-white/[0.02] border border-white/[0.05] backdrop-blur-xl">
+        <div className="flex items-center gap-1.5 p-1.5 bg-black/40 rounded-2xl border border-white/5 w-full md:w-auto overflow-x-auto no-scrollbar">
           {DURATIONS.map(({ value, label }) => (
             <button
               key={value}
               onClick={() => setDuration(value)}
-              className={`px-6 py-2 rounded-xl text-xs font-bold transition-all duration-300 ${
+              className={`px-4 sm:px-6 py-2 rounded-xl text-xs font-bold transition-all duration-300 whitespace-nowrap ${
                 duration === value
                   ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/20'
                   : 'text-slate-500 hover:text-slate-300'

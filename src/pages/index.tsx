@@ -38,14 +38,14 @@ export default function Home() {
             Real-time Repository Intelligence
           </div>
 
-          <h1 className="text-6xl md:text-8xl font-black tracking-tighter text-white mb-6 leading-[0.9]">
-            The Pulse of <br />
+          <h1 className="text-5xl sm:text-6xl md:text-8xl font-black tracking-tighter text-white mb-6 leading-[1.1] sm:leading-[0.9]">
+            The Pulse of <br className="hidden sm:block" />
             <span className="bg-gradient-to-r from-indigo-500 via-violet-500 to-fuchsia-500 bg-clip-text text-transparent">
               Open Source.
             </span>
           </h1>
 
-          <p className="max-w-2xl mx-auto text-lg md:text-xl text-slate-400 font-medium leading-relaxed mb-12">
+          <p className="max-w-2xl mx-auto text-base sm:text-lg md:text-xl text-slate-400 font-medium leading-relaxed mb-10 px-4">
             Stay ahead of the curve. Discover the next big thing in software through deep analytics, real-time trending data, and historical rankings.
           </p>
 
@@ -101,7 +101,7 @@ export default function Home() {
       </section>
 
       {/* Stats Section */}
-      <section className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-32">
+      <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-24 md:mb-32">
         {[
           { label: 'Active Repos', value: '1.2M+' },
           { label: 'Updates / Hr', value: '850+' },

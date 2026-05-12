@@ -121,7 +121,7 @@ export const Layout: React.FC<LayoutProps> = ({
           {children}
         </main>
 
-        <footer className="relative z-10 border-t border-white/[0.05] py-10">
+        <footer className="relative z-10 border-t border-white/[0.05] py-10 pb-28 md:pb-10">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex flex-col items-center md:items-start gap-2">
               <div className="flex items-center gap-2">
@@ -158,6 +158,26 @@ export const Layout: React.FC<LayoutProps> = ({
             </div>
           </div>
         </footer>
+
+        {/* Mobile bottom nav */}
+        <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#080c14]/90 backdrop-blur-xl border-t border-white/[0.05] pb-safe">
+          <div className="flex items-center justify-around h-16 px-2">
+            {navLinks.map(({ href, label }) => {
+              const active = router.pathname === href
+              return (
+                <Link
+                  key={href}
+                  href={href}
+                  className={`flex flex-col items-center justify-center w-full h-full ${
+                    active ? 'text-indigo-400' : 'text-slate-500 hover:text-slate-300'
+                  }`}
+                >
+                  <span className="text-[10px] font-black uppercase tracking-widest">{label}</span>
+                </Link>
+              )
+            })}
+          </div>
+        </nav>
       </div>
     </>
   )
