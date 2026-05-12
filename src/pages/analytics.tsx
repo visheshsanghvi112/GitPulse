@@ -119,10 +119,10 @@ export default function Analytics() {
         className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10"
       >
         {[
-          { label: 'Repositories Analyzed', value: loading ? '...' : String(items.length), color: 'from-indigo-400 to-indigo-600' },
-          { label: 'Aggregate Stars', value: loading ? '...' : fmt(totalStars), color: 'from-amber-400 to-orange-500' },
-          { label: 'Average Repo Stars', value: loading ? '...' : fmt(avgStars), color: 'from-emerald-400 to-teal-500' },
-          { label: 'Dominant Ecosystem', value: loading ? '...' : topLang, color: 'from-fuchsia-400 to-purple-600' },
+          { label: 'Ecosystem Signals', value: loading ? '...' : fmt(data?.total_count || items.length), color: 'from-indigo-400 to-indigo-600' },
+          { label: 'Sample Stars Tracked', value: loading ? '...' : fmt(totalStars), color: 'from-amber-400 to-orange-500' },
+          { label: 'Average Velocity', value: loading ? '...' : fmt(avgStars), color: 'from-emerald-400 to-teal-500' },
+          { label: 'Dominant Framework', value: loading ? '...' : topLang, color: 'from-fuchsia-400 to-purple-600' },
         ].map((s) => (
           <motion.div 
             key={s.label} 

@@ -55,7 +55,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           q: qstr,
           sort: 'stars',
           order: 'desc',
-          per_page: 30,
+          per_page: 100,
           page: Number(page),
         })
         res.setHeader('Cache-Control', 's-maxage=120, stale-while-revalidate=300')
