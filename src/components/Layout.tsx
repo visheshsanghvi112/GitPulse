@@ -59,7 +59,8 @@ export const Layout: React.FC<LayoutProps> = ({
           <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-fuchsia-600/10 blur-[120px] animate-pulse" style={{ animationDelay: '1s' }} />
         </div>
 
-        {/* Sticky top nav *        <header className="sticky top-0 z-50 w-full backdrop-blur-md bg-black/20 border-b border-white/[0.05]">
+        {/* Sticky top nav */}
+        <header className="sticky top-0 z-50 w-full backdrop-blur-md bg-black/20 border-b border-white/[0.05]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 grid grid-cols-2 md:grid-cols-3 items-center">
             {/* Logo */}
             <div className="flex justify-start">

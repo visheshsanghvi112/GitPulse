@@ -90,7 +90,7 @@ export const RepoCardAdvanced: React.FC<{ repo?: Repo; skeleton?: boolean }> = (
           {/* Avatar */}
           <img
             src={repo.owner.avatar_url || `https://avatars.githubusercontent.com/u/0?v=4`}
-            alt={repo.owner.login}
+            alt={`${repo.owner.login}'s avatar`}
             className="h-10 w-10 rounded-lg ring-1 ring-white/10 flex-shrink-0 bg-slate-800"
             onError={(e) => { (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${repo.owner.login}&background=6366f1&color=fff&size=40` }}
           />
