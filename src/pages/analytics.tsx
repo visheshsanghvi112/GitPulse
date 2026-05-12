@@ -7,18 +7,18 @@ import {
   PieChart, Pie, Legend, ScatterChart, Scatter, ZAxis, CartesianGrid
 } from 'recharts'
 
-// High-end cyber palette
+// Unified Brand Palette (Indigo -> Violet -> Fuchsia)
 const COLORS = [
-  '#818cf8', // Indigo
-  '#c084fc', // Purple
-  '#2dd4bf', // Teal
-  '#fbbf24', // Amber
-  '#f472b6', // Pink
-  '#38bdf8', // Sky
-  '#a78bfa', // Violet
-  '#34d399', // Emerald
-  '#f87171', // Red
-  '#94a3b8'  // Slate
+  '#4f46e5', // indigo-600
+  '#6366f1', // indigo-500
+  '#818cf8', // indigo-400
+  '#7c3aed', // violet-600
+  '#8b5cf6', // violet-500
+  '#a78bfa', // violet-400
+  '#c026d3', // fuchsia-600
+  '#d946ef', // fuchsia-500
+  '#e879f9', // fuchsia-400
+  '#9333ea'  // purple-600
 ]
 
 const DURATIONS = [
@@ -35,7 +35,7 @@ function fmt(n: number) {
 const CustomTooltip = ({ active, payload }: any) => {
   if (!active || !payload?.length) return null
   return (
-    <div className="bg-[#0a0f1c] backdrop-blur-2xl px-5 py-4 rounded-2xl text-xs text-white shadow-[0_0_40px_rgba(0,0,0,0.5)] border border-white/10 ring-1 ring-white/5">
+    <div className="bg-black/60 backdrop-blur-2xl px-5 py-4 rounded-2xl text-xs text-white shadow-[0_0_40px_rgba(79,70,229,0.15)] border border-white/10 ring-1 ring-white/5">
       <div className="font-black text-sm mb-2">{payload[0].payload.name}</div>
       <div className="text-slate-400 font-medium flex items-center gap-2">
         <div className="w-2 h-2 rounded-full" style={{ backgroundColor: payload[0].fill || '#818cf8' }} />
@@ -96,7 +96,7 @@ export default function Analytics() {
       </div>
 
       {/* Duration filter */}
-      <div className="flex items-center gap-1 bg-[#0a0f1c]/80 backdrop-blur-md rounded-xl p-1.5 w-full sm:w-fit overflow-x-auto no-scrollbar mb-10 border border-white/5">
+      <div className="flex items-center gap-1 bg-white/[0.03] backdrop-blur-md rounded-xl p-1.5 w-full sm:w-fit overflow-x-auto no-scrollbar mb-10 border border-white/5">
         {DURATIONS.map(({ value, label }) => (
           <button
             key={value}
@@ -120,9 +120,9 @@ export default function Analytics() {
       >
         {[
           { label: 'Ecosystem Signals', value: loading ? '...' : fmt(data?.total_count || items.length), color: 'from-indigo-400 to-indigo-600' },
-          { label: 'Sample Stars Tracked', value: loading ? '...' : fmt(totalStars), color: 'from-amber-400 to-orange-500' },
-          { label: 'Average Velocity', value: loading ? '...' : fmt(avgStars), color: 'from-emerald-400 to-teal-500' },
-          { label: 'Dominant Framework', value: loading ? '...' : topLang, color: 'from-fuchsia-400 to-purple-600' },
+          { label: 'Sample Stars Tracked', value: loading ? '...' : fmt(totalStars), color: 'from-violet-400 to-violet-600' },
+          { label: 'Average Velocity', value: loading ? '...' : fmt(avgStars), color: 'from-purple-400 to-purple-600' },
+          { label: 'Dominant Framework', value: loading ? '...' : topLang, color: 'from-fuchsia-400 to-fuchsia-600' },
         ].map((s) => (
           <motion.div 
             key={s.label} 
@@ -144,9 +144,9 @@ export default function Analytics() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="bg-[#0a0f1c]/50 border border-white/[0.05] backdrop-blur-2xl rounded-[2rem] p-6 sm:p-8 relative overflow-hidden"
+          className="bg-white/[0.02] border border-white/[0.05] backdrop-blur-2xl rounded-[2rem] p-6 sm:p-8 relative overflow-hidden"
         >
-          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-indigo-500 to-purple-500 opacity-50" />
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-indigo-500 to-violet-500 opacity-50" />
           <h2 className="text-xs font-black uppercase tracking-[0.2em] text-slate-500 mb-8">Top Repositories by Star Velocity</h2>
           
           {loading ? (
@@ -176,9 +176,9 @@ export default function Analytics() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="bg-[#0a0f1c]/50 border border-white/[0.05] backdrop-blur-2xl rounded-[2rem] p-6 sm:p-8 relative overflow-hidden"
+          className="bg-white/[0.02] border border-white/[0.05] backdrop-blur-2xl rounded-[2rem] p-6 sm:p-8 relative overflow-hidden"
         >
-          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-fuchsia-500 to-pink-500 opacity-50" />
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-violet-500 to-fuchsia-500 opacity-50" />
           <h2 className="text-xs font-black uppercase tracking-[0.2em] text-slate-500 mb-8">Ecosystem Distribution Matrix</h2>
           
           {loading ? (
@@ -197,7 +197,7 @@ export default function Analytics() {
                   outerRadius={100}
                   innerRadius={75}
                   paddingAngle={4}
-                  stroke="rgba(10,15,28,1)"
+                  stroke="rgba(0,0,0,0.2)"
                   strokeWidth={4}
                   cornerRadius={6}
                 >
@@ -222,9 +222,9 @@ export default function Analytics() {
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
-        className="bg-[#0a0f1c]/50 border border-white/[0.05] backdrop-blur-2xl rounded-[2rem] p-6 sm:p-8 mb-6 relative overflow-hidden"
+        className="bg-white/[0.02] border border-white/[0.05] backdrop-blur-2xl rounded-[2rem] p-6 sm:p-8 mb-6 relative overflow-hidden"
       >
-        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-teal-400 to-emerald-500 opacity-50" />
+        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-fuchsia-500 to-indigo-500 opacity-50" />
         <h2 className="text-xs font-black uppercase tracking-[0.2em] text-slate-500 mb-8">Engagement Scatter Vector (Stars vs Forks)</h2>
         
         {loading ? (
@@ -261,17 +261,17 @@ export default function Analytics() {
                   if (active && payload && payload.length) {
                     const data = payload[0].payload;
                     return (
-                      <div className="bg-[#0a0f1c] backdrop-blur-2xl px-5 py-4 rounded-2xl text-xs text-slate-200 shadow-[0_0_40px_rgba(45,212,191,0.15)] border border-teal-500/20 ring-1 ring-white/5">
+                      <div className="bg-black/60 backdrop-blur-2xl px-5 py-4 rounded-2xl text-xs text-slate-200 shadow-[0_0_40px_rgba(139,92,246,0.15)] border border-violet-500/20 ring-1 ring-white/5">
                         <div className="font-black text-sm mb-3 text-white tracking-wide">{data.name}</div>
                         <div className="flex items-center justify-between gap-6">
                           <div className="flex flex-col">
                             <span className="text-[9px] uppercase tracking-[0.2em] text-slate-500 font-bold mb-1">Stars</span>
-                            <span className="text-yellow-400 font-black text-sm">{fmt(data.x)}</span>
+                            <span className="text-indigo-400 font-black text-sm">{fmt(data.x)}</span>
                           </div>
                           <div className="h-6 w-px bg-white/10" />
                           <div className="flex flex-col">
                             <span className="text-[9px] uppercase tracking-[0.2em] text-slate-500 font-bold mb-1">Forks</span>
-                            <span className="text-teal-400 font-black text-sm">{fmt(data.y)}</span>
+                            <span className="text-fuchsia-400 font-black text-sm">{fmt(data.y)}</span>
                           </div>
                         </div>
                       </div>
@@ -282,7 +282,7 @@ export default function Analytics() {
               />
               <Scatter name="Repos" data={scatterData}>
                 {scatterData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill="#2dd4bf" opacity={0.6} stroke="#ccfbf1" strokeWidth={1} />
+                  <Cell key={`cell-${index}`} fill="#8b5cf6" opacity={0.6} stroke="#e2e8f0" strokeWidth={1} />
                 ))}
               </Scatter>
             </ScatterChart>
