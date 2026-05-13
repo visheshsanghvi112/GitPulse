@@ -61,7 +61,7 @@ export const Layout: React.FC<LayoutProps> = ({
         </div>
 
         {/* Sticky top nav */}
-        <header className="sticky top-0 z-50 w-full backdrop-blur-md bg-black/20 border-b border-white/[0.05]">
+        <header className="sticky top-0 z-50 w-full backdrop-blur-xl bg-[#050914]/80 border-b border-white/[0.05]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 grid grid-cols-2 md:grid-cols-3 items-center">
             {/* Logo */}
             <div className="flex justify-start">
@@ -141,7 +141,7 @@ export const Layout: React.FC<LayoutProps> = ({
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm md:hidden"
+                  className="fixed inset-0 z-[60] bg-black/80 backdrop-blur-md md:hidden"
                 />
                 
                 <motion.div
@@ -149,7 +149,7 @@ export const Layout: React.FC<LayoutProps> = ({
                   animate={{ x: 0 }}
                   exit={{ x: '100%' }}
                   transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-                  className="fixed top-0 right-0 bottom-0 w-64 z-[70] bg-[#080c14] border-l border-white/10 shadow-2xl md:hidden flex flex-col"
+                  className="fixed top-0 right-0 bottom-0 w-[80vw] max-w-sm z-[70] bg-[#0a0f1c] border-l border-white/10 shadow-[0_0_100px_rgba(0,0,0,1)] md:hidden flex flex-col"
                 >
                   <div className="flex items-center justify-between h-16 px-4 border-b border-white/10">
                     <span className="font-bold text-white tracking-widest text-sm">MENU</span>
