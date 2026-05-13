@@ -200,7 +200,7 @@ export default function Home() {
 
       {/* Dynamic Grid Section */}
       <section className="mb-32 relative z-10">
-        <motion.div style={{ y: y1 }} className="flex flex-col md:flex-row items-end justify-between gap-6 mb-16">
+        <motion.div className="flex flex-col md:flex-row items-end justify-between gap-6 mb-16">
           <div className="max-w-xl">
             <h2 className="text-4xl md:text-5xl font-black text-white mb-4 tracking-tighter">Engineered for <br /><span className="text-[#00f2fe]">Alpha Discovery.</span></h2>
             <p className="text-slate-400 font-medium text-lg">We process millions of data points to bring you the most relevant software trends before they hit the mainstream.</p>
@@ -215,7 +215,6 @@ export default function Home() {
             whileHover={{ y: -8 }}
             className="md:col-span-8 p-10 rounded-[2rem] bg-gradient-to-br from-[#050914] to-[#0a0f1c] border border-white/10 relative overflow-hidden group shadow-[0_20px_40px_rgba(0,0,0,0.5)]"
           >
-            <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay" />
             <div className="absolute top-0 right-0 w-64 h-64 bg-[#00f2fe]/10 rounded-full blur-[80px] group-hover:bg-[#00f2fe]/20 transition-colors duration-700" />
             
             <div className="relative z-10">
@@ -246,7 +245,6 @@ export default function Home() {
 
       {/* Interactive CTA */}
       <motion.section 
-        style={{ y: y2 }}
         className="relative p-12 md:p-24 rounded-[3rem] bg-black overflow-hidden border border-white/10"
       >
         <div className="absolute inset-0">
