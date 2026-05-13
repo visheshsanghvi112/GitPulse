@@ -132,72 +132,74 @@ export const Layout: React.FC<LayoutProps> = ({
               </button>
             </div>
           </div>
-          
-          <AnimatePresence>
-            {isMobileMenuOpen && (
-              <>
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="fixed inset-0 z-[60] bg-black/80 backdrop-blur-md md:hidden"
-                />
+        </header>
+
+        <AnimatePresence>
+          {isMobileMenuOpen && (
+            <>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-md md:hidden"
+              />
+              
+              <motion.div
+                initial={{ x: '100%' }}
+                animate={{ x: 0 }}
+                exit={{ x: '100%' }}
+                transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+                className="fixed top-0 right-0 bottom-0 w-[80vw] max-w-sm z-[110] bg-slate-950 border-l border-white/10 shadow-[0_0_100px_rgba(0,0,0,1)] md:hidden flex flex-col"
+              >
+                <div className="flex items-center justify-between h-16 px-4 border-b border-white/10">
+                  <span className="font-bold text-white tracking-widest text-sm">MENU</span>
+                  <button 
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="p-2 text-white/70 hover:text-white transition-colors rounded-xl hover:bg-white/5"
+                  >
+                    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
                 
-                <motion.div
-                  initial={{ x: '100%' }}
-                  animate={{ x: 0 }}
-                  exit={{ x: '100%' }}
-                  transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-                  className="fixed top-0 right-0 bottom-0 w-[80vw] max-w-sm z-[70] bg-[#0a0f1c] border-l border-white/10 shadow-[0_0_100px_rgba(0,0,0,1)] md:hidden flex flex-col"
-                >
-                  <div className="flex items-center justify-between h-16 px-4 border-b border-white/10">
-                    <span className="font-bold text-white tracking-widest text-sm">MENU</span>
-                    <button 
-                      onClick={() => setIsMobileMenuOpen(false)}
-                      className="p-2 text-white/70 hover:text-white transition-colors rounded-xl hover:bg-white/5"
-                    >
-                      <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                      </svg>
-                    </button>
-                  </div>
-                  
-                  <nav className="flex flex-col p-4 gap-2 flex-1">
-                    {navLinks.map(({ href, label }) => {
-                      const active = router.pathname === href
-                      return (
-                        <Link
-                          key={href}
-                          href={href}
-                          onClick={() => setIsMobileMenuOpen(false)}
-                          className={`px-4 py-3 rounded-xl text-sm font-bold transition-all ${
-                            active
-                              ? 'bg-indigo-600/20 text-indigo-400'
-                              : 'text-slate-400 hover:text-white hover:bg-white/5'
-                          }`}
-                        >
-                          {label}
-                        </Link>
-                      )
-                    })}
+                <nav className="flex flex-col p-4 gap-2 flex-1">
+                  {navLinks.map(({ href, label }) => {
+                    const active = router.pathname === href
+                    return (
+                      <Link
+                        key={href}
+                        href={href}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className={`px-4 py-4 rounded-xl text-base font-bold transition-all ${
+                          active
+                            ? 'bg-indigo-500/20 text-indigo-400 border border-indigo-500/20'
+                            : 'text-slate-300 hover:text-white hover:bg-white/5'
+                        }`}
+                      >
+                        {label}
+                      </Link>
+                    )
+                  })}
+                  <div className="mt-auto pb-4">
                     <a
                       href="https://github.com/visheshsanghvi112/GitPulse"
                       target="_blank"
                       rel="noreferrer"
-                      className="mt-4 flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-sm font-bold bg-white text-black hover:bg-slate-200 transition-all shadow-xl shadow-white/5"
+                      className="flex items-center justify-center gap-2 px-4 py-4 rounded-xl text-base font-bold bg-white text-black hover:bg-slate-200 transition-all shadow-xl shadow-white/5"
                     >
-                      <svg viewBox="0 0 16 16" className="h-4 w-4 fill-current">
+                      <svg viewBox="0 0 16 16" className="h-5 w-5 fill-current">
                         <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z" />
                       </svg>
-                      GitHub
+                      View on GitHub
                     </a>
-                  </nav>
-                </motion.div>
-              </>
-            )}
-          </AnimatePresence>
-        </header>
+                  </div>
+                </nav>
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence>
 
         <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 min-h-[calc(100vh-160px)]">
           {children}
