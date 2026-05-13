@@ -123,16 +123,6 @@ export default function Home() {
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="relative z-10 w-full max-w-4xl"
         >
-          <motion.div 
-            whileHover={{ scale: 1.05 }}
-            className="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-white/[0.03] border border-white/10 backdrop-blur-xl text-[10px] font-black tracking-[0.2em] uppercase text-white mb-8 cursor-pointer shadow-[0_0_30px_rgba(99,102,241,0.2)]"
-          >
-            <span className="flex h-2 w-2 relative">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00f2fe] opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#00f2fe]"></span>
-            </span>
-            Neural-Net Telemetry Online
-          </motion.div>
 
           <h1 className="text-5xl sm:text-7xl md:text-[6rem] font-black tracking-tighter text-white mb-8 leading-[1.05] drop-shadow-2xl">
             The Pulse of <br />
@@ -199,7 +189,7 @@ export default function Home() {
       </section>
 
       {/* Dynamic Grid Section */}
-      <section className="mb-32 relative z-10">
+      <section className="mt-32 mb-32 relative z-10">
         <motion.div className="flex flex-col md:flex-row items-end justify-between gap-6 mb-16">
           <div className="max-w-xl">
             <h2 className="text-4xl md:text-5xl font-black text-white mb-4 tracking-tighter">Engineered for <br /><span className="text-[#00f2fe]">Alpha Discovery.</span></h2>
