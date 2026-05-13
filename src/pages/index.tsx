@@ -1,194 +1,237 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Layout from '@/components/Layout'
 import Link from 'next/link'
-import { motion } from 'framer-motion'
+import { motion, useScroll, useTransform } from 'framer-motion'
 
-const FEATURES = [
-  { icon: '🔥', title: 'Daily Trending', desc: 'Repos ranked by stars gained today, this week, and this month.' },
-  { icon: '📊', title: 'Rich Analytics', desc: 'Language breakdowns, star history, and fork trends at a glance.' },
-  { icon: '⚡', title: 'Snapshot-Fast', desc: 'JSON snapshots committed daily — no live API bottlenecks.' },
-  { icon: '🌐', title: 'Multi-language', desc: 'Filter by JavaScript, TypeScript, Python, Go, Rust and more.' },
-]
-
-const STATS = [
-  { value: '100+', label: 'Repos tracked daily' },
-  { value: '6+', label: 'Languages covered' },
-  { value: '<1s', label: 'Load time' },
-]
+const FloatingRepoCard = ({ delay, yOffset, xOffset, name, stars, lang, color }: any) => {
+  return (
+    <motion.div
+      animate={{ 
+        y: [yOffset, yOffset - 20, yOffset],
+        rotateZ: [-2, 2, -2]
+      }}
+      transition={{ 
+        duration: 6, 
+        repeat: Infinity, 
+        delay: delay,
+        ease: "easeInOut" 
+      }}
+      className={`absolute ${xOffset} hidden lg:flex flex-col gap-2 p-4 bg-[#0a0f1c]/80 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[0_0_40px_rgba(0,0,0,0.5)] w-48 z-0 cursor-pointer hover:scale-105 transition-transform`}
+    >
+      <div className="flex items-center gap-2 mb-1">
+        <div className={`w-2 h-2 rounded-full ${color} animate-pulse`} />
+        <span className="text-[10px] font-black uppercase text-slate-400 tracking-wider">Trending</span>
+      </div>
+      <div className="text-sm font-bold text-white truncate">{name}</div>
+      <div className="flex items-center justify-between mt-2">
+        <div className="flex items-center gap-1 text-xs font-bold text-indigo-400">
+          <svg viewBox="0 0 16 16" className="w-3 h-3 fill-current"><path d="M8 .25a.75.75 0 01.673.418l1.882 3.815 4.21.612a.75.75 0 01.416 1.279l-3.046 2.97.719 4.192a.75.75 0 01-1.088.791L8 12.347l-3.766 1.98a.75.75 0 01-1.088-.79l.72-4.194L.818 6.374a.75.75 0 01.416-1.28l4.21-.611L7.327.668A.75.75 0 018 .25z"/></svg>
+          {stars}
+        </div>
+        <span className="text-[9px] font-black uppercase text-slate-500 bg-white/5 px-2 py-0.5 rounded-full">{lang}</span>
+      </div>
+    </motion.div>
+  )
+}
 
 export default function Home() {
+  const { scrollY } = useScroll()
+  const y1 = useTransform(scrollY, [0, 1000], [0, 200])
+  const y2 = useTransform(scrollY, [0, 1000], [0, -200])
+  
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePos({ 
+        x: (e.clientX / window.innerWidth) * 20 - 10,
+        y: (e.clientY / window.innerHeight) * 20 - 10
+      })
+    }
+    window.addEventListener('mousemove', handleMouseMove)
+    return () => window.removeEventListener('mousemove', handleMouseMove)
+  }, [])
+
   return (
     <Layout
       title="GitHub Pulse — The Intelligence Layer for Open Source"
-      description="GitHub Pulse provides real-time insights into the world's most trending and high-impact repositories. Explore analytics, rankings, and deep-dives into open-source excellence."
+      description="GitHub Pulse provides real-time insights into the world's most trending and high-impact repositories."
     >
       {/* Hero Section */}
-      <section className="relative pt-20 pb-32 flex flex-col items-center text-center">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="relative z-10"
+      <section className="relative pt-24 pb-40 flex flex-col items-center text-center perspective-1000">
+        
+        {/* Interactive Mouse Glow */}
+        <motion.div 
+          animate={{ x: mousePos.x * -10, y: mousePos.y * -10 }}
+          transition={{ type: "spring", stiffness: 50, damping: 20 }}
+          className="absolute inset-0 pointer-events-none -z-10 flex items-center justify-center"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-xl text-[11px] font-bold tracking-[0.2em] uppercase text-indigo-400 mb-8">
-            <span className="flex h-2 w-2 relative">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
-            </span>
-            Real-time Repository Intelligence
-          </div>
+          <div className="w-[800px] h-[800px] bg-gradient-to-tr from-indigo-500/10 via-fuchsia-500/5 to-transparent blur-[120px] rounded-full" />
+        </motion.div>
 
-          <h1 className="text-5xl sm:text-6xl md:text-8xl font-black tracking-tighter text-white mb-6 leading-[1.1] sm:leading-[0.9]">
-            The Pulse of <br className="hidden sm:block" />
-            <span className="bg-gradient-to-r from-indigo-500 via-violet-500 to-fuchsia-500 bg-clip-text text-transparent">
-              Open Source.
+        {/* Floating Mockup Cards */}
+        <FloatingRepoCard delay={0} yOffset={20} xOffset="-left-10 xl:-left-20" name="antirez/ds4" stars="12.4k" lang="C" color="bg-[#00f2fe]" />
+        <FloatingRepoCard delay={1.5} yOffset={100} xOffset="-right-10 xl:-right-20" name="vercel/next.js" stars="121k" lang="TypeScript" color="bg-[#ff0844]" />
+        <FloatingRepoCard delay={3} yOffset={240} xOffset="left-10 xl:left-0" name="facebook/react" stars="224k" lang="JavaScript" color="bg-[#f9d423]" />
+        <FloatingRepoCard delay={4.5} yOffset={280} xOffset="right-10 xl:right-0" name="torvalds/linux" stars="170k" lang="C" color="bg-[#c471f5]" />
+
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="relative z-10 w-full max-w-4xl"
+        >
+          <motion.div 
+            whileHover={{ scale: 1.05 }}
+            className="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-white/[0.03] border border-white/10 backdrop-blur-xl text-[10px] font-black tracking-[0.2em] uppercase text-white mb-8 cursor-pointer shadow-[0_0_30px_rgba(99,102,241,0.2)]"
+          >
+            <span className="flex h-2 w-2 relative">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00f2fe] opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#00f2fe]"></span>
+            </span>
+            Neural-Net Telemetry Online
+          </motion.div>
+
+          <h1 className="text-5xl sm:text-7xl md:text-[6rem] font-black tracking-tighter text-white mb-8 leading-[1.05] drop-shadow-2xl">
+            The Pulse of <br />
+            <span className="relative inline-block mt-2">
+              <span className="absolute -inset-2 bg-gradient-to-r from-[#00f2fe] via-[#c471f5] to-[#ff0844] blur-2xl opacity-40 animate-pulse" />
+              <span className="relative bg-gradient-to-r from-[#00f2fe] via-[#c471f5] to-[#ff0844] bg-clip-text text-transparent">
+                Open Source.
+              </span>
             </span>
           </h1>
 
-          <p className="max-w-2xl mx-auto text-base sm:text-lg md:text-xl text-slate-400 font-medium leading-relaxed mb-10 px-4">
-            Stay ahead of the curve. Discover the next big thing in software through deep analytics, real-time trending data, and historical rankings.
+          <p className="max-w-2xl mx-auto text-lg sm:text-xl text-slate-400 font-medium leading-relaxed mb-12 px-4 drop-shadow-md">
+            Tap directly into the global development matrix. Real-time velocity tracking, deep-scan analytics, and predictive trending algorithms for world-class engineers.
           </p>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link
-              href="/trending"
-              className="group relative px-8 py-4 bg-white text-black font-bold rounded-2xl transition-all duration-300 hover:scale-105 active:scale-95 shadow-2xl shadow-white/10"
-            >
-              <span className="relative z-10 flex items-center gap-2">
-                Explore Trending
-                <svg viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 group-hover:translate-x-1 transition-transform">
-                  <path fillRule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.638L10.23 5.29a.75.75 0 111.04-1.08l5.5 5.25a.75.75 0 010 1.08l-5.5 5.25a.75.75 0 11-1.04-1.08l4.158-3.96H3.75A.75.75 0 013 10z" clipRule="evenodd" />
-                </svg>
-              </span>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+            <Link href="/trending">
+              <motion.button
+                whileHover={{ scale: 1.05, boxShadow: "0 0 40px rgba(0, 242, 254, 0.4)" }}
+                whileTap={{ scale: 0.95 }}
+                className="group relative px-10 py-5 bg-white text-black font-black uppercase tracking-widest text-sm rounded-2xl overflow-hidden transition-all shadow-[0_0_20px_rgba(255,255,255,0.2)]"
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-[#00f2fe]/20 to-[#c471f5]/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 ease-in-out" />
+                <span className="relative z-10 flex items-center gap-3">
+                  Initialize Scan
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3} className="w-4 h-4 group-hover:translate-x-1 transition-transform">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                  </svg>
+                </span>
+              </motion.button>
             </Link>
             <Link
-              href="/rankings"
-              className="px-8 py-4 bg-white/5 hover:bg-white/10 text-white font-bold rounded-2xl border border-white/10 transition-all duration-300 backdrop-blur-xl"
+              href="/analytics"
+              className="px-10 py-5 bg-white/5 hover:bg-white/10 text-white font-black uppercase tracking-widest text-sm rounded-2xl border border-white/10 transition-all duration-300 backdrop-blur-xl hover:shadow-[0_0_30px_rgba(255,255,255,0.1)]"
             >
-              View Rankings
+              View Analytics
             </Link>
           </div>
         </motion.div>
 
-        {/* Live Ticker */}
-        <div className="mt-24 w-full overflow-hidden whitespace-nowrap relative">
-          <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-[#080c14] to-transparent z-10" />
-          <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-[#080c14] to-transparent z-10" />
+        {/* Live Ticker Feed */}
+        <div className="absolute bottom-0 w-full overflow-hidden whitespace-nowrap bg-white/[0.02] border-t border-b border-white/5 py-4 backdrop-blur-sm">
+          <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-[#050914] to-transparent z-10" />
+          <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-[#050914] to-transparent z-10" />
           <motion.div 
-            animate={{ x: [0, -1000] }}
+            animate={{ x: [0, -2000] }}
             transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
-            className="inline-flex gap-12 items-center text-[10px] font-black uppercase tracking-[0.3em] text-slate-800"
+            className="inline-flex gap-16 items-center text-xs font-black uppercase tracking-[0.2em] text-slate-300"
           >
             {[
-              "Real-time Data Streaming", "Snapshot Sync: 100%", "API Status: Healthy", 
-              "Trending Repos Identified: 842", "Analytics Engine: Active",
-              "Real-time Data Streaming", "Snapshot Sync: 100%", "API Status: Healthy", 
-              "Trending Repos Identified: 842", "Analytics Engine: Active"
-            ].map((text, i) => (
+              { t: "⚡ React spiked +1,240★ in 24h", c: "bg-[#00f2fe]" },
+              { t: "🔥 antirez/ds4 Trending #1", c: "bg-[#ff0844]" },
+              { t: "🌐 TypeScript overtakes Python in daily velocity", c: "bg-[#f9d423]" },
+              { t: "🚀 Next.js v15 Telemetry Online", c: "bg-[#c471f5]" },
+              { t: "📈 13,542 active repositories scanned", c: "bg-[#0ba360]" },
+              { t: "⚡ React spiked +1,240★ in 24h", c: "bg-[#00f2fe]" },
+              { t: "🔥 antirez/ds4 Trending #1", c: "bg-[#ff0844]" },
+              { t: "🌐 TypeScript overtakes Python in daily velocity", c: "bg-[#f9d423]" },
+              { t: "🚀 Next.js v15 Telemetry Online", c: "bg-[#c471f5]" },
+              { t: "📈 13,542 active repositories scanned", c: "bg-[#0ba360]" }
+            ].map((item, i) => (
               <span key={i} className="flex items-center gap-3">
-                <span className="h-1.5 w-1.5 rounded-full bg-indigo-500/30" />
-                {text}
+                <span className={`h-2 w-2 rounded-full ${item.c} shadow-[0_0_10px_currentColor]`} />
+                {item.t}
               </span>
             ))}
           </motion.div>
         </div>
+      </section>
 
-        {/* Abstract Background Elements */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full pointer-events-none overflow-hidden -z-10">
-          <div className="absolute top-[20%] left-[10%] w-[500px] h-[500px] bg-indigo-600/10 blur-[150px] rounded-full" />
-          <div className="absolute bottom-[20%] right-[10%] w-[500px] h-[500px] bg-violet-600/10 blur-[150px] rounded-full" />
+      {/* Dynamic Grid Section */}
+      <section className="mb-32 relative z-10">
+        <motion.div style={{ y: y1 }} className="flex flex-col md:flex-row items-end justify-between gap-6 mb-16">
+          <div className="max-w-xl">
+            <h2 className="text-4xl md:text-5xl font-black text-white mb-4 tracking-tighter">Engineered for <br /><span className="text-[#00f2fe]">Alpha Discovery.</span></h2>
+            <p className="text-slate-400 font-medium text-lg">We process millions of data points to bring you the most relevant software trends before they hit the mainstream.</p>
+          </div>
+          <Link href="/analytics" className="text-sm font-black uppercase tracking-widest text-white hover:text-[#00f2fe] transition-colors flex items-center gap-2 group bg-white/5 px-6 py-3 rounded-full border border-white/10">
+            Access Terminal <span className="group-hover:translate-x-1 transition-transform">→</span>
+          </Link>
+        </motion.div>
+
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+          <motion.div 
+            whileHover={{ y: -8 }}
+            className="md:col-span-8 p-10 rounded-[2rem] bg-gradient-to-br from-[#050914] to-[#0a0f1c] border border-white/10 relative overflow-hidden group shadow-[0_20px_40px_rgba(0,0,0,0.5)]"
+          >
+            <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay" />
+            <div className="absolute top-0 right-0 w-64 h-64 bg-[#00f2fe]/10 rounded-full blur-[80px] group-hover:bg-[#00f2fe]/20 transition-colors duration-700" />
+            
+            <div className="relative z-10">
+              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#00f2fe] to-[#4facfe] flex items-center justify-center text-white mb-8 shadow-[0_0_30px_rgba(0,242,254,0.3)]">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} className="w-7 h-7"><path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+              </div>
+              <h3 className="text-3xl font-black text-white mb-4 tracking-tight">Hyper-Velocity Tracking</h3>
+              <p className="text-slate-400 text-lg leading-relaxed font-medium max-w-lg">Identify massive spikes in repository adoption the moment they happen. Our algorithms track star velocity, fork momentum, and language shifts in real-time.</p>
+            </div>
+          </motion.div>
+
+          <motion.div 
+            whileHover={{ y: -8 }}
+            className="md:col-span-4 p-10 rounded-[2rem] bg-gradient-to-br from-[#050914] to-[#0a0f1c] border border-white/10 relative overflow-hidden group shadow-[0_20px_40px_rgba(0,0,0,0.5)]"
+          >
+            <div className="absolute top-0 right-0 w-40 h-40 bg-[#ff0844]/10 rounded-full blur-[60px] group-hover:bg-[#ff0844]/20 transition-colors duration-700" />
+            
+            <div className="relative z-10">
+              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#ff0844] to-[#ffb199] flex items-center justify-center text-white mb-8 shadow-[0_0_30px_rgba(255,8,68,0.3)]">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} className="w-7 h-7"><path strokeLinecap="round" strokeLinejoin="round" d="M9.75 3v1.25m0 0h.75m-.75 0V3m.75 1.25h.75m-.75 0V3m.75 1.25h.75" /></svg>
+              </div>
+              <h3 className="text-2xl font-black text-white mb-4 tracking-tight">Deep Matrix</h3>
+              <p className="text-slate-400 font-medium">Access years of historical data to uncover hidden, long-term foundational shifts.</p>
+            </div>
+          </motion.div>
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-24 md:mb-32">
-        {[
-          { label: 'Active Repos', value: '1.2M+' },
-          { label: 'Updates / Hr', value: '850+' },
-          { label: 'Languages', value: '45+' },
-          { label: 'Analytics Pins', value: '12K+' },
-        ].map((stat, i) => (
-          <motion.div
-            key={stat.label}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: i * 0.1 }}
-            className="p-8 rounded-3xl bg-white/[0.02] border border-white/[0.05] flex flex-col items-center justify-center text-center backdrop-blur-sm"
-          >
-            <span className="text-3xl font-black text-white mb-1 tracking-tight">{stat.value}</span>
-            <span className="text-[10px] font-bold tracking-widest uppercase text-slate-500">{stat.label}</span>
-          </motion.div>
-        ))}
-      </section>
-
-      {/* Features Grid */}
-      <section className="mb-32">
-        <div className="flex flex-col md:flex-row items-end justify-between gap-6 mb-12">
-          <div className="max-w-xl">
-            <h2 className="text-4xl font-bold text-white mb-4 tracking-tight">Built for Builders.</h2>
-            <p className="text-slate-400 font-medium">We process millions of data points to bring you the most relevant software trends before they hit the mainstream.</p>
-          </div>
-          <Link href="/analytics" className="text-sm font-bold text-indigo-400 hover:text-indigo-300 transition-colors flex items-center gap-2 group">
-            Detailed Analytics <span className="group-hover:translate-x-1 transition-transform">→</span>
+      {/* Interactive CTA */}
+      <motion.section 
+        style={{ y: y2 }}
+        className="relative p-12 md:p-24 rounded-[3rem] bg-black overflow-hidden border border-white/10"
+      >
+        <div className="absolute inset-0">
+          <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-[#c471f5]/20 to-[#00f2fe]/20" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#00f2fe]/20 blur-[120px] rounded-full mix-blend-screen animate-pulse" />
+        </div>
+        
+        <div className="relative z-10 flex flex-col items-center text-center">
+          <h2 className="text-5xl md:text-7xl font-black text-white mb-6 tracking-tighter drop-shadow-2xl">Enter the <br /> Ecosystem.</h2>
+          <p className="text-white/70 text-xl font-medium mb-12 max-w-xl">Initialize your terminal and tap directly into the source code of the internet.</p>
+          
+          <Link href="/trending">
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="px-12 py-6 bg-white text-black font-black uppercase tracking-widest text-sm rounded-full shadow-[0_0_50px_rgba(255,255,255,0.3)] hover:shadow-[0_0_80px_rgba(255,255,255,0.5)] transition-shadow"
+            >
+              Commence Uplink
+            </motion.button>
           </Link>
         </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {[
-            {
-              title: 'Trend Forecasting',
-              desc: 'Identify emerging patterns in library adoption and developer interests globally.',
-              icon: 'M13 10V3L4 14H11V21L20 10H13Z',
-              color: 'from-blue-500 to-cyan-500'
-            },
-            {
-              title: 'Language Insights',
-              desc: 'Detailed shifts in programming language popularity across different sectors.',
-              icon: 'M9.75 3.104v1.242c0 .483.391.874.875.874h.75c.484 0 .875-.391.875-.874V3.104c.484.06.904.325 1.154.715l.391.61c.25.39.25.88 0 1.27l-.391.61a1.375 1.375 0 01-1.154.715h-.75c-.484 0-.875.391-.875.875v.75c0 .484.391.875.875.875h.75c.484 0 .875-.391.875-.875v-.75c0-.484.391-.875.875-.875h.75c.484 0 .875.391.875.875v.75c0 .484.391.875.875.875h.75c.484 0 .875-.391.875-.875v-.75c0-.484.391-.875.875-.875h.75c.484 0 .875.391.875.875v.75c0 .484.391.875.875.875h.75c.484 0 .875-.391.875-.875v-.75c0-.484.391-.875.875-.875h.75c.484 0 .875.391.875.875v.75c0 .484.391.875.875.875h.75c.484 0 .875-.391.875-.875v-.75',
-              color: 'from-indigo-500 to-violet-500'
-            },
-            {
-              title: 'Historical Archive',
-              desc: 'Access years of repository data to understand long-term growth and stability.',
-              icon: 'M12 6v6m0 0v6m0-6h6m-6 0H6',
-              color: 'from-fuchsia-500 to-pink-500'
-            }
-          ].map((f, i) => (
-            <motion.div
-              key={f.title}
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
-              className="group p-10 rounded-3xl bg-white/[0.02] border border-white/[0.05] hover:bg-white/[0.04] transition-all duration-500"
-            >
-              <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${f.color} flex items-center justify-center text-white mb-8 shadow-lg shadow-indigo-500/20 group-hover:scale-110 transition-transform duration-500`}>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} className="w-6 h-6">
-                  <path strokeLinecap="round" strokeLinejoin="round" d={f.icon} />
-                </svg>
-              </div>
-              <h3 className="text-xl font-bold text-white mb-3">{f.title}</h3>
-              <p className="text-slate-500 text-sm leading-relaxed font-medium">{f.desc}</p>
-            </motion.div>
-          ))}
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="relative p-12 md:p-24 rounded-[40px] bg-gradient-to-br from-indigo-600 to-violet-700 overflow-hidden shadow-2xl shadow-indigo-500/20">
-        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 contrast-150 brightness-100" />
-        <div className="relative z-10 max-w-2xl">
-          <h2 className="text-4xl md:text-5xl font-black text-white mb-6 leading-tight">Master the <br /> GitHub Ecosystem.</h2>
-          <p className="text-indigo-100 text-lg font-medium mb-10 opacity-90">Join thousands of developers using GitHub Pulse to discover high-quality projects and stay informed.</p>
-          <div className="flex flex-wrap gap-4">
-            <Link href="/trending" className="px-10 py-4 bg-white text-indigo-600 font-black rounded-2xl hover:scale-105 active:scale-95 transition-all shadow-xl shadow-black/10">
-              Get Started Now
-            </Link>
-          </div>
-        </div>
-        <div className="absolute right-[-10%] bottom-[-10%] w-[500px] h-[500px] bg-white/10 blur-[100px] rounded-full" />
-      </section>
+      </motion.section>
     </Layout>
   )
 }
