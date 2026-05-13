@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import Layout from '@/components/Layout'
 import Link from 'next/link'
 import { motion, useScroll, useTransform } from 'framer-motion'
+import { useSnapshots } from '@/hooks/useSnapshots'
 
 const FloatingRepoCard = ({ delay, yOffset, xOffset, name, stars, lang, color }: any) => {
   return (
@@ -28,10 +29,16 @@ const FloatingRepoCard = ({ delay, yOffset, xOffset, name, stars, lang, color }:
           <svg viewBox="0 0 16 16" className="w-3 h-3 fill-current"><path d="M8 .25a.75.75 0 01.673.418l1.882 3.815 4.21.612a.75.75 0 01.416 1.279l-3.046 2.97.719 4.192a.75.75 0 01-1.088.791L8 12.347l-3.766 1.98a.75.75 0 01-1.088-.79l.72-4.194L.818 6.374a.75.75 0 01.416-1.28l4.21-.611L7.327.668A.75.75 0 018 .25z"/></svg>
           {stars}
         </div>
-        <span className="text-[9px] font-black uppercase text-slate-500 bg-white/5 px-2 py-0.5 rounded-full">{lang}</span>
+        <span className="text-[9px] font-black uppercase text-slate-500 bg-white/5 px-2 py-0.5 rounded-full truncate max-w-[60px] text-center">{lang}</span>
       </div>
     </motion.div>
   )
+}
+
+function fmt(n: number) {
+  if (!n) return '0'
+  if (n >= 1000) return `${(n / 1000).toFixed(1)}k`
+  return String(n)
 }
 
 export default function Home() {
@@ -40,6 +47,7 @@ export default function Home() {
   const y2 = useTransform(scrollY, [0, 1000], [0, -200])
   
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
+  const { data } = useSnapshots('week')
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -51,6 +59,30 @@ export default function Home() {
     window.addEventListener('mousemove', handleMouseMove)
     return () => window.removeEventListener('mousemove', handleMouseMove)
   }, [])
+
+  // Process Live Data
+  const items = useMemo(() => data?.items || [], [data])
+  const totalCount = data?.total_count || 0
+  
+  const top4 = items.slice(0, 4)
+  const tickerData = items.slice(0, 8)
+
+  const colors = ["bg-[#00f2fe]", "bg-[#ff0844]", "bg-[#f9d423]", "bg-[#c471f5]", "bg-[#0ba360]"]
+
+  // Generate dynamic ticker items based on real data
+  const dynamicTicker = useMemo(() => {
+    if (!tickerData.length) return null;
+    const phrases = tickerData.map((repo: any, i: number) => ({
+      t: `${i % 2 === 0 ? '🔥' : '⚡'} ${repo.full_name} trending with ${fmt(repo.stargazers_count)}★`,
+      c: colors[i % colors.length]
+    }))
+    
+    if (totalCount > 0) {
+      phrases.push({ t: `📈 ${fmt(totalCount)} active repositories scanned globally`, c: "bg-[#0ba360]" })
+    }
+    // Duplicate array to make scrolling seamless
+    return [...phrases, ...phrases]
+  }, [tickerData, totalCount])
 
   return (
     <Layout
@@ -69,11 +101,21 @@ export default function Home() {
           <div className="w-[800px] h-[800px] bg-gradient-to-tr from-indigo-500/10 via-fuchsia-500/5 to-transparent blur-[120px] rounded-full" />
         </motion.div>
 
-        {/* Floating Mockup Cards */}
-        <FloatingRepoCard delay={0} yOffset={20} xOffset="-left-10 xl:-left-20" name="antirez/ds4" stars="12.4k" lang="C" color="bg-[#00f2fe]" />
-        <FloatingRepoCard delay={1.5} yOffset={100} xOffset="-right-10 xl:-right-20" name="vercel/next.js" stars="121k" lang="TypeScript" color="bg-[#ff0844]" />
-        <FloatingRepoCard delay={3} yOffset={240} xOffset="left-10 xl:left-0" name="facebook/react" stars="224k" lang="JavaScript" color="bg-[#f9d423]" />
-        <FloatingRepoCard delay={4.5} yOffset={280} xOffset="right-10 xl:right-0" name="torvalds/linux" stars="170k" lang="C" color="bg-[#c471f5]" />
+        {/* Floating Mockup Cards (Real Data) */}
+        {top4[0] && <FloatingRepoCard delay={0} yOffset={20} xOffset="-left-10 xl:-left-20" name={top4[0].name} stars={fmt(top4[0].stargazers_count)} lang={top4[0].language || 'Unknown'} color="bg-[#00f2fe]" />}
+        {top4[1] && <FloatingRepoCard delay={1.5} yOffset={100} xOffset="-right-10 xl:-right-20" name={top4[1].name} stars={fmt(top4[1].stargazers_count)} lang={top4[1].language || 'Unknown'} color="bg-[#ff0844]" />}
+        {top4[2] && <FloatingRepoCard delay={3} yOffset={240} xOffset="left-10 xl:left-0" name={top4[2].name} stars={fmt(top4[2].stargazers_count)} lang={top4[2].language || 'Unknown'} color="bg-[#f9d423]" />}
+        {top4[3] && <FloatingRepoCard delay={4.5} yOffset={280} xOffset="right-10 xl:right-0" name={top4[3].name} stars={fmt(top4[3].stargazers_count)} lang={top4[3].language || 'Unknown'} color="bg-[#c471f5]" />}
+
+        {/* Fallback dummy data if loading or failed so the page isn't empty */}
+        {!top4.length && (
+          <>
+            <FloatingRepoCard delay={0} yOffset={20} xOffset="-left-10 xl:-left-20" name="Loading..." stars="--" lang="--" color="bg-slate-700" />
+            <FloatingRepoCard delay={1.5} yOffset={100} xOffset="-right-10 xl:-right-20" name="Loading..." stars="--" lang="--" color="bg-slate-700" />
+            <FloatingRepoCard delay={3} yOffset={240} xOffset="left-10 xl:left-0" name="Loading..." stars="--" lang="--" color="bg-slate-700" />
+            <FloatingRepoCard delay={4.5} yOffset={280} xOffset="right-10 xl:right-0" name="Loading..." stars="--" lang="--" color="bg-slate-700" />
+          </>
+        )}
 
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -140,18 +182,13 @@ export default function Home() {
             transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
             className="inline-flex gap-16 items-center text-xs font-black uppercase tracking-[0.2em] text-slate-300"
           >
-            {[
-              { t: "⚡ React spiked +1,240★ in 24h", c: "bg-[#00f2fe]" },
-              { t: "🔥 antirez/ds4 Trending #1", c: "bg-[#ff0844]" },
-              { t: "🌐 TypeScript overtakes Python in daily velocity", c: "bg-[#f9d423]" },
-              { t: "🚀 Next.js v15 Telemetry Online", c: "bg-[#c471f5]" },
-              { t: "📈 13,542 active repositories scanned", c: "bg-[#0ba360]" },
-              { t: "⚡ React spiked +1,240★ in 24h", c: "bg-[#00f2fe]" },
-              { t: "🔥 antirez/ds4 Trending #1", c: "bg-[#ff0844]" },
-              { t: "🌐 TypeScript overtakes Python in daily velocity", c: "bg-[#f9d423]" },
-              { t: "🚀 Next.js v15 Telemetry Online", c: "bg-[#c471f5]" },
-              { t: "📈 13,542 active repositories scanned", c: "bg-[#0ba360]" }
-            ].map((item, i) => (
+            {(dynamicTicker || [
+              { t: "⚡ Fetching live telemetry...", c: "bg-slate-500" },
+              { t: "🔥 Synchronizing ecosystem data...", c: "bg-slate-500" },
+              { t: "🌐 Connecting to matrix...", c: "bg-slate-500" },
+              { t: "🚀 Calibrating sensors...", c: "bg-slate-500" },
+              { t: "📈 Scanning repositories...", c: "bg-slate-500" }
+            ]).map((item: any, i: number) => (
               <span key={i} className="flex items-center gap-3">
                 <span className={`h-2 w-2 rounded-full ${item.c} shadow-[0_0_10px_currentColor]`} />
                 {item.t}
