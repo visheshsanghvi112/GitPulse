@@ -280,7 +280,11 @@ export const Layout: React.FC<LayoutProps> = ({
                   <div className="space-y-4">
                     <div className="text-[10px] font-black text-slate-600 uppercase tracking-[0.2em]">Latest Briefing</div>
                     <div className="p-6 rounded-2xl bg-white/[0.03] border border-white/10 text-sm text-slate-300 leading-relaxed font-medium">
-                      "I've detected a significant shift in <span className="text-indigo-400 font-bold">TypeScript adoption</span> within the systems programming niche. Many developers are moving from Go to Rust for high-performance CLI tools. Recommendation: Watch the <span className="text-white">shuttle-hq/shuttle</span> repository for next-gen backend infra."
+                      {"I've detected a significant shift in "}
+                      <span className="text-indigo-400 font-bold">TypeScript adoption</span>
+                      {" within the systems programming niche. Many developers are moving from Go to Rust for high-performance CLI tools. Recommendation: Watch the "}
+                      <span className="text-white">shuttle-hq/shuttle</span>
+                      {" repository for next-gen backend infra."}
                     </div>
                   </div>
 

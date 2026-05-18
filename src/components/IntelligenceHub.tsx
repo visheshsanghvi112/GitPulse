@@ -89,7 +89,7 @@ export const IntelligenceHub = ({ topSignals, pulse }: IntelligenceHubProps) => 
                         {signal.repo}
                       </div>
                       <div className="text-xs text-slate-500 leading-relaxed font-medium line-clamp-2 italic">
-                        "{signal.narrative}"
+                        &ldquo;{signal.narrative}&rdquo;
                       </div>
                     </motion.div>
                   ))

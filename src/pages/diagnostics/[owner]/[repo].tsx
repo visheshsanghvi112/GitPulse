@@ -117,7 +117,7 @@ export default function DiagnosticsPage({ repo, currentMomentum, dossier, calibr
                   {currentMomentum.classification?.replace('_', ' ') || 'Monitoring'}
                 </div>
                 <p className="text-slate-400 text-2xl font-medium leading-relaxed italic border-l-4 border-indigo-500/40 pl-8 max-w-3xl">
-                  "{currentMomentum.narrative}"
+                  &ldquo;{currentMomentum.narrative}&rdquo;
                 </p>
               </div>
 
