@@ -1,0 +1,32 @@
+[
+  {
+    "repo": "oven-sh/bun",
+    "category": "infra",
+    "groundTruth": "STABLE_LEADER",
+    "notes": "Consistently trending since launch, high community pull."
+  },
+  {
+    "repo": "facebook/react",
+    "category": "frontend",
+    "groundTruth": "SUSTAINED",
+    "notes": "Large stable project, steady growth."
+  },
+  {
+    "repo": "openai/openai-python",
+    "category": "ai",
+    "groundTruth": "BREAKOUT",
+    "notes": "Rapid adoption during model releases."
+  },
+  {
+    "repo": "rust-lang/rust",
+    "category": "infra",
+    "groundTruth": "SUSTAINED",
+    "notes": "Steady core infra growth."
+  },
+  {
+    "repo": "shadcn/ui",
+    "category": "frontend",
+    "groundTruth": "STABLE_LEADER",
+    "notes": "High recent dominance in frontend tooling."
+  }
+]

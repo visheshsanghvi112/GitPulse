@@ -17,6 +17,7 @@ export const Layout: React.FC<LayoutProps> = ({
 }) => {
   const router = useRouter()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [isAiOpen, setIsAiOpen] = useState(false)
   const { scrollYProgress } = useScroll()
   const scaleX = useSpring(scrollYProgress, {
     stiffness: 100,
@@ -55,8 +56,8 @@ export const Layout: React.FC<LayoutProps> = ({
           {/* Tech Grid Pattern */}
           <div className="absolute inset-0 opacity-[0.15]" style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, rgba(255,255,255,0.05) 1px, transparent 0)', backgroundSize: '40px 40px' }} />
           
-          <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-indigo-600/10 blur-[120px] animate-pulse" />
-          <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-fuchsia-600/10 blur-[120px] animate-pulse" style={{ animationDelay: '1s' }} />
+          <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-indigo-600/5 blur-[80px]" />
+          <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-fuchsia-600/5 blur-[80px]" />
         </div>
 
         {/* Sticky top nav */}
@@ -241,6 +242,98 @@ export const Layout: React.FC<LayoutProps> = ({
             </div>
           </div>
         </footer>
+
+        {/* Pulse AI Assistant */}
+        <AnimatePresence>
+          {isAiOpen && (
+            <>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setIsAiOpen(false)}
+                className="fixed inset-0 z-[150] bg-black/60 backdrop-blur-sm"
+              />
+              <motion.div
+                initial={{ x: '100%' }}
+                animate={{ x: 0 }}
+                exit={{ x: '100%' }}
+                transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+                className="fixed top-0 right-0 bottom-0 w-full max-w-md z-[160] bg-[#050914] border-l border-white/10 shadow-[0_0_100px_rgba(0,0,0,1)] flex flex-col"
+              >
+                <div className="p-8 border-b border-white/5 flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="h-8 w-8 rounded-lg bg-indigo-500 flex items-center justify-center text-white">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} className="w-4 h-4"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" /></svg>
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="text-sm font-black text-white tracking-widest uppercase">Pulse AI</span>
+                      <span className="text-[10px] font-black text-indigo-400 uppercase tracking-widest">Intelligence Layer</span>
+                    </div>
+                  </div>
+                  <button onClick={() => setIsAiOpen(false)} className="text-slate-500 hover:text-white transition-colors">
+                    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                  </button>
+                </div>
+                
+                <div className="flex-1 overflow-y-auto p-8 space-y-8 no-scrollbar">
+                  <div className="space-y-4">
+                    <div className="text-[10px] font-black text-slate-600 uppercase tracking-[0.2em]">Latest Briefing</div>
+                    <div className="p-6 rounded-2xl bg-white/[0.03] border border-white/10 text-sm text-slate-300 leading-relaxed font-medium">
+                      "I've detected a significant shift in <span className="text-indigo-400 font-bold">TypeScript adoption</span> within the systems programming niche. Many developers are moving from Go to Rust for high-performance CLI tools. Recommendation: Watch the <span className="text-white">shuttle-hq/shuttle</span> repository for next-gen backend infra."
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div className="text-[10px] font-black text-slate-600 uppercase tracking-[0.2em]">Ecosystem Anomalies</div>
+                    {[
+                      { label: 'Unicorn Detected', desc: 'Repo "shadcn-ui" is gaining stars 4x faster than typical UI libs.', color: 'text-orange-400' },
+                      { label: 'Market Shift', desc: 'Python is losing 2.4% share in data-science to Mojo.', color: 'text-fuchsia-400' },
+                    ].map((item, i) => (
+                      <div key={i} className="flex gap-4 items-start p-4 rounded-xl bg-white/[0.01] border border-white/5">
+                        <div className={`mt-1 h-1.5 w-1.5 rounded-full shrink-0 ${item.color.replace('text', 'bg')}`} />
+                        <div>
+                          <div className={`text-[10px] font-black uppercase mb-1 ${item.color}`}>{item.label}</div>
+                          <div className="text-xs text-slate-500 font-medium">{item.desc}</div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="p-8 rounded-[2rem] bg-gradient-to-br from-indigo-500/10 to-fuchsia-500/10 border border-indigo-500/20 text-center">
+                    <div className="text-xl font-black text-white mb-2">Want deeper scans?</div>
+                    <p className="text-xs text-slate-400 mb-6">Upgrade to GitPulse Alpha for real-time predictive modeling.</p>
+                    <button className="px-6 py-3 bg-white text-black text-[10px] font-black uppercase tracking-widest rounded-xl">Initialize Upgrade</button>
+                  </div>
+                </div>
+
+                <div className="p-6 border-t border-white/5 bg-white/[0.02]">
+                  <div className="relative">
+                    <input 
+                      type="text" 
+                      placeholder="Ask Pulse AI about the ecosystem..."
+                      className="w-full bg-[#050914] border border-white/10 rounded-xl px-4 py-3 text-xs text-white placeholder-slate-600 outline-none focus:border-indigo-500/50 transition-colors"
+                    />
+                    <div className="absolute right-3 top-1/2 -translate-y-1/2 text-indigo-500">
+                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" /></svg>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence>
+
+        {/* AI Toggle Button */}
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => setIsAiOpen(true)}
+          className="fixed bottom-8 right-8 z-[140] h-14 w-14 rounded-full bg-white text-black shadow-[0_10px_40px_rgba(255,255,255,0.3)] flex items-center justify-center group overflow-hidden"
+        >
+          <div className="absolute inset-0 bg-gradient-to-tr from-indigo-500 to-fuchsia-500 opacity-0 group-hover:opacity-10 transition-opacity" />
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} className="w-6 h-6"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" /></svg>
+        </motion.button>
       </div>
     </>
   )

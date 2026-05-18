@@ -1,8 +1,27 @@
 import React, { useEffect, useState, useMemo } from 'react'
 import Layout from '@/components/Layout'
 import Link from 'next/link'
-import { motion, useScroll, useTransform } from 'framer-motion'
+import { motion, useScroll, useTransform, useMotionValue, useSpring } from 'framer-motion'
 import { useSnapshots } from '@/hooks/useSnapshots'
+import { IntelligenceHub } from '@/components/IntelligenceHub'
+import { GetServerSideProps } from 'next'
+import { getTopSignals, getSystemPulse, SystemPulse, MomentumSignal } from '@/lib/intelligence'
+
+interface HomeProps {
+  topSignals: MomentumSignal[]
+  pulse: SystemPulse
+}
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  const topSignals = getTopSignals(5)
+  const pulse = getSystemPulse()
+  return {
+    props: {
+      topSignals: JSON.parse(JSON.stringify(topSignals)),
+      pulse: JSON.parse(JSON.stringify(pulse))
+    }
+  }
+}
 
 const FloatingRepoCard = ({ delay, yOffset, xOffset, name, stars, lang, color }: any) => {
   return (
@@ -17,7 +36,7 @@ const FloatingRepoCard = ({ delay, yOffset, xOffset, name, stars, lang, color }:
         delay: delay,
         ease: "easeInOut" 
       }}
-      className={`absolute ${xOffset} hidden lg:flex flex-col gap-2 p-4 bg-[#0a0f1c]/80 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[0_0_40px_rgba(0,0,0,0.5)] w-48 z-0 cursor-pointer hover:scale-105 transition-transform`}
+      className={`absolute ${xOffset} hidden lg:flex flex-col gap-2 p-4 bg-[#0a0f1c]/80 backdrop-blur-md border border-white/10 rounded-2xl shadow-[0_0_40px_rgba(0,0,0,0.5)] w-48 z-0 cursor-pointer hover:scale-105 transition-transform`}
     >
       <div className="flex items-center gap-2 mb-1">
         <div className={`w-2 h-2 rounded-full ${color} animate-pulse`} />
@@ -41,24 +60,28 @@ function fmt(n: number) {
   return String(n)
 }
 
-export default function Home() {
+export default function Home({ topSignals, pulse }: HomeProps) {
   const { scrollY } = useScroll()
-  const y1 = useTransform(scrollY, [0, 1000], [0, 200])
-  const y2 = useTransform(scrollY, [0, 1000], [0, -200])
   
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
+  const mouseX = useMotionValue(0)
+  const mouseY = useMotionValue(0)
+  
+  const springX = useSpring(mouseX, { stiffness: 50, damping: 20 })
+  const springY = useSpring(mouseY, { stiffness: 50, damping: 20 })
+
+  const glowX = useTransform(springX, (val) => val * -10)
+  const glowY = useTransform(springY, (val) => val * -10)
+  
   const { data } = useSnapshots('week')
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      setMousePos({ 
-        x: (e.clientX / window.innerWidth) * 20 - 10,
-        y: (e.clientY / window.innerHeight) * 20 - 10
-      })
+      mouseX.set((e.clientX / window.innerWidth) * 20 - 10)
+      mouseY.set((e.clientY / window.innerHeight) * 20 - 10)
     }
     window.addEventListener('mousemove', handleMouseMove)
     return () => window.removeEventListener('mousemove', handleMouseMove)
-  }, [])
+  }, [mouseX, mouseY])
 
   // Process Live Data
   const items = useMemo(() => data?.items || [], [data])
@@ -94,11 +117,10 @@ export default function Home() {
         
         {/* Interactive Mouse Glow */}
         <motion.div 
-          animate={{ x: mousePos.x * -10, y: mousePos.y * -10 }}
-          transition={{ type: "spring", stiffness: 50, damping: 20 }}
+          style={{ x: glowX, y: glowY }}
           className="absolute inset-0 pointer-events-none -z-10 flex items-center justify-center"
         >
-          <div className="w-[800px] h-[800px] bg-gradient-to-tr from-indigo-500/10 via-fuchsia-500/5 to-transparent blur-[120px] rounded-full" />
+          <div className="w-[800px] h-[800px] bg-gradient-to-tr from-indigo-500/5 via-fuchsia-500/5 to-transparent blur-[80px] rounded-full" />
         </motion.div>
 
         {/* Floating Mockup Cards (Real Data) */}
@@ -187,6 +209,9 @@ export default function Home() {
           </motion.div>
         </div>
       </section>
+
+      {/* Intelligence Hub */}
+      <IntelligenceHub topSignals={topSignals} pulse={pulse} />
 
       {/* Dynamic Grid Section */}
       <section className="mt-32 mb-32 relative z-10">

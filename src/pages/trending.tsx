@@ -36,13 +36,59 @@ export default function Trending() {
             </span>
           ) : (
             <>
-              <span className="h-2 w-2 rounded-full bg-green-500" />
+              <span className="h-2 w-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.5)]" />
               Found {items.length} high-impact repositories
-              {data?.date && <span className="text-slate-600">• Snapshot: {data.date}</span>}
+              <span className="text-slate-600">• {data?._source || 'GitHub Intelligence'}</span>
+              {data?._scanned_at && <span className="text-slate-600">• Scanned: {new Date(data._scanned_at).toLocaleTimeString()}</span>}
+              <a 
+                href={`https://github.com/trending?since=${duration === 'today' ? 'daily' : duration === 'month' ? 'monthly' : 'weekly'}`}
+                target="_blank"
+                rel="noreferrer"
+                className="ml-2 px-2 py-0.5 rounded bg-white/5 border border-white/10 text-[10px] text-slate-400 hover:text-white transition-colors"
+              >
+                Verify on GitHub ↗
+              </a>
             </>
           )}
         </p>
       </div>
+
+      {/* Spotlight Section */}
+      {!loading && items[0] && (
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.98 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="mb-12 p-8 md:p-12 rounded-[3rem] bg-gradient-to-br from-[#0a0f1c] to-black border border-white/10 relative overflow-hidden group shadow-2xl"
+        >
+          <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-500/10 rounded-full blur-[100px] group-hover:bg-indigo-500/20 transition-colors" />
+          <div className="relative z-10 flex flex-col md:flex-row gap-8 items-center">
+            <div className="h-32 w-32 shrink-0 rounded-3xl bg-white/5 border border-white/10 flex items-center justify-center text-4xl shadow-2xl">
+              {items[0].language === 'Rust' ? '🦀' : items[0].language === 'Python' ? '🐍' : '🚀'}
+            </div>
+            <div className="flex-1 text-center md:text-left">
+              <div className="text-[10px] font-black text-indigo-400 uppercase tracking-[0.3em] mb-3">Project of the Week</div>
+              <h2 className="text-3xl md:text-4xl font-black text-white mb-4 tracking-tighter">{items[0].name}</h2>
+              <p className="text-slate-400 text-lg font-medium leading-relaxed max-w-2xl mb-6 line-clamp-2">{items[0].description}</p>
+              <div className="flex flex-wrap justify-center md:justify-start gap-4">
+                <div className="px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-xs font-bold text-white flex items-center gap-2">
+                  ⭐ {(items[0].stargazers_count || items[0].stars || 0).toLocaleString()} Stars
+                </div>
+                <div className="px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-xs font-bold text-indigo-400 flex items-center gap-2">
+                  🔥 High Velocity
+                </div>
+              </div>
+            </div>
+            <a 
+              href={items[0].html_url} 
+              target="_blank" 
+              rel="noreferrer"
+              className="px-8 py-4 bg-white text-black font-black uppercase tracking-widest text-xs rounded-2xl hover:scale-105 transition-transform shadow-[0_0_30px_rgba(255,255,255,0.2)]"
+            >
+              Analyze Project →
+            </a>
+          </div>
+        </motion.div>
+      )}
 
       {/* Filters Section */}
       <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-12 p-4 sm:p-6 rounded-[2rem] bg-white/[0.02] border border-white/[0.05] backdrop-blur-xl">

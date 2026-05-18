@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import Layout from '@/components/Layout'
 import { motion, AnimatePresence } from 'framer-motion'
 import useSWR from 'swr'
+import { ComparisonModal } from '@/components/ComparisonModal'
 
 const fetcher = (url: string) => fetch(url).then((r) => r.json())
 
@@ -92,6 +93,8 @@ export default function Rankings() {
   const [category, setCategory] = useState('stars')
   const [search, setSearch] = useState('')
   const [debouncedSearch, setDebouncedSearch] = useState('')
+  const [selectedRepos, setSelectedRepos] = useState<any[]>([])
+  const [showComparison, setShowComparison] = useState(false)
 
   const url = `/api/rankings?category=${category}${debouncedSearch ? `&q=${encodeURIComponent(debouncedSearch)}` : ''}`
   const { data, isLoading } = useSWR(url, fetcher, { revalidateOnFocus: false })
@@ -102,6 +105,14 @@ export default function Rankings() {
     setSearch(val)
     clearTimeout((handleSearch as any)._t)
     ;(handleSearch as any)._t = setTimeout(() => setDebouncedSearch(val), 350)
+  }
+
+  const toggleRepoSelection = (repo: any) => {
+    if (selectedRepos.find(r => r.html_url === repo.html_url)) {
+      setSelectedRepos(selectedRepos.filter(r => r.html_url !== repo.html_url))
+    } else if (selectedRepos.length < 2) {
+      setSelectedRepos([...selectedRepos, repo])
+    }
   }
 
   return (
@@ -178,6 +189,46 @@ export default function Rankings() {
           {data?.source && <div className="h-1 w-1 rounded-full bg-slate-700" />}
           Showing {items.length} Curated results
         </div>
+
+        {/* Comparison Floating Action */}
+        <AnimatePresence>
+          {selectedRepos.length > 0 && (
+            <motion.div
+              initial={{ y: 100, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: 100, opacity: 0 }}
+              className="fixed bottom-10 left-1/2 -translate-x-1/2 z-50 flex items-center gap-4 bg-[#050914]/95 backdrop-blur-xl border border-white/10 px-6 py-4 rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
+            >
+              <div className="flex items-center gap-2">
+                {selectedRepos.map((r, i) => (
+                  <div key={r.html_url} className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/5 border border-white/10">
+                    <span className="text-[10px] font-black text-white truncate max-w-[80px]">{r.name}</span>
+                    <button onClick={() => toggleRepoSelection(r)} className="text-slate-500 hover:text-red-400">×</button>
+                  </div>
+                ))}
+                {selectedRepos.length === 1 && (
+                  <div className="px-3 py-1.5 rounded-xl border border-dashed border-white/10 text-[9px] font-black text-slate-600 uppercase tracking-widest">
+                    Select one more...
+                  </div>
+                )}
+              </div>
+              
+              <div className="h-6 w-px bg-white/10" />
+              
+              <button
+                disabled={selectedRepos.length < 2}
+                onClick={() => setShowComparison(true)}
+                className={`px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
+                  selectedRepos.length === 2
+                    ? 'bg-indigo-500 text-white shadow-[0_0_20px_rgba(99,102,241,0.4)]'
+                    : 'bg-white/5 text-slate-600 cursor-not-allowed'
+                }`}
+              >
+                Execute Comparison
+              </button>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       {/* Table */}
@@ -216,8 +267,21 @@ export default function Rankings() {
                     initial={{ opacity: 0, x: -8 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.25, delay: Math.min(i * 0.02, 0.4) }}
-                    className="grid grid-cols-[30px_1fr_60px] sm:grid-cols-[60px_1fr_100px_100px_120px] gap-3 sm:gap-4 px-4 sm:px-8 py-4 sm:py-6 items-center hover:bg-white/[0.03] transition-colors group"
+                    className="grid grid-cols-[30px_1fr_60px] sm:grid-cols-[60px_1fr_100px_100px_120px] gap-3 sm:gap-4 px-4 sm:px-8 py-4 sm:py-6 items-center hover:bg-white/[0.03] transition-colors group relative"
                   >
+                    {/* Selection Overlay */}
+                    <div 
+                      onClick={(e) => {
+                        e.preventDefault()
+                        e.stopPropagation()
+                        toggleRepoSelection(repo)
+                      }}
+                      className={`absolute left-0 top-0 bottom-0 w-1 transition-all ${
+                        selectedRepos.find(r => r.html_url === repo.html_url)
+                          ? 'bg-indigo-500'
+                          : 'bg-transparent group-hover:bg-white/10'
+                      }`} 
+                    />
                     {/* Rank */}
                     <div className={`text-lg font-black tracking-tighter tabular-nums ${
                       repo.rank <= 3 ? 'text-indigo-400' : 'text-slate-700'
@@ -279,6 +343,16 @@ export default function Rankings() {
       </div>
 
       <div className="mt-8 h-1" />
+
+      <AnimatePresence>
+        {showComparison && (
+          <ComparisonModal 
+            repo1={selectedRepos[0]} 
+            repo2={selectedRepos[1]} 
+            onClose={() => setShowComparison(false)} 
+          />
+        )}
+      </AnimatePresence>
     </Layout>
   )
 }

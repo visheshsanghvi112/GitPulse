@@ -30,3 +30,6 @@ Thumbs.db
 # optional caches
 .turbo/
 coverage/
+
+# tsbuildinfo cache
+*.tsbuildinfo

@@ -180,7 +180,7 @@ export default function Analytics() {
           <motion.div 
             key={s.label} 
             whileHover={{ scale: 1.02, y: -4 }}
-            className="p-6 rounded-[2rem] bg-[#050914]/50 border border-white/10 flex flex-col justify-between backdrop-blur-2xl relative overflow-hidden group shadow-[0_8px_32px_rgba(0,0,0,0.5)]"
+            className="p-6 rounded-[2rem] bg-[#050914]/80 border border-white/10 flex flex-col justify-between backdrop-blur-xl relative overflow-hidden group shadow-[0_8px_32px_rgba(0,0,0,0.5)]"
           >
             <div className={`absolute top-0 right-0 w-40 h-40 ${s.glow} opacity-0 group-hover:opacity-20 blur-[64px] transition-opacity duration-700`} />
             <div className={`absolute -inset-px bg-gradient-to-r ${s.color} rounded-[2rem] opacity-0 group-hover:opacity-30 transition-opacity duration-500 blur-md`} />
@@ -213,7 +213,7 @@ export default function Analytics() {
                 <XAxis type="number" hide />
                 <YAxis type="category" dataKey="name" width={110} tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 800 }} axisLine={false} tickLine={false} />
                 <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(255,255,255,0.02)' }} />
-                <Bar dataKey="stars" radius={[0, 4, 4, 0]} fill="url(#barGradient)" barSize={16} />
+                <Bar dataKey="stars" radius={[0, 4, 4, 0]} fill="url(#barGradient)" barSize={16} isAnimationActive={false} />
               </BarChart>
             </ResponsiveContainer>
           )}
@@ -248,6 +248,7 @@ export default function Analytics() {
                   stroke="rgba(5,9,20,1)"
                   strokeWidth={6}
                   cornerRadius={8}
+                  isAnimationActive={false}
                 >
                   {langData.map((_, i) => (
                     <Cell key={i} fill={GRADIENTS[i % GRADIENTS.length]} />
@@ -270,7 +271,7 @@ export default function Analytics() {
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
-        className="bg-[#050914]/60 border border-white/10 backdrop-blur-3xl rounded-[2rem] p-6 sm:p-8 mb-6 relative overflow-hidden shadow-[0_16px_64px_rgba(0,0,0,0.5)]"
+        className="bg-[#050914]/80 border border-white/10 backdrop-blur-xl rounded-[2rem] p-6 sm:p-8 mb-6 relative overflow-hidden shadow-[0_16px_64px_rgba(0,0,0,0.5)]"
       >
         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#0ba360] to-[#3cba92]" />
         <h2 className="text-xs font-black uppercase tracking-[0.2em] text-[#0ba360] mb-8 drop-shadow-[0_0_8px_rgba(11,163,96,0.8)]">Engagement Scatter Vector (Stars vs Forks)</h2>

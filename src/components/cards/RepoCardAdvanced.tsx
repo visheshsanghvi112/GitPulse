@@ -15,6 +15,8 @@ type Repo = {
   owner: { login: string; avatar_url?: string }
   html_url: string
   pushed_at?: string
+  trending_velocity?: string
+  official_rank?: number
 }
 
 const LANG_COLORS: Record<string, string> = {
@@ -78,7 +80,7 @@ export const RepoCardAdvanced: React.FC<{ repo?: Repo; skeleton?: boolean }> = (
       transition={{ type: 'spring', stiffness: 300, damping: 22 }}
     >
       <div
-        className="glass p-5 rounded-2xl shadow-lg hover:shadow-2xl hover:shadow-indigo-900/20 transition-all duration-300 relative overflow-hidden h-full"
+        className="glass p-5 rounded-2xl shadow-lg hover:shadow-2xl hover:shadow-indigo-900/20 transition-all duration-300 relative overflow-hidden h-full border border-white/5"
         style={{
           transform: 'perspective(1000px) rotateX(calc((var(--py,0.5)-0.5) * 5deg)) rotateY(calc((var(--px,0.5)-0.5) * -5deg))'
         }}
@@ -86,7 +88,31 @@ export const RepoCardAdvanced: React.FC<{ repo?: Repo; skeleton?: boolean }> = (
         {/* Subtle inner glow */}
         <div className="absolute inset-0 bg-gradient-to-br from-indigo-600/[0.06] to-pink-500/[0.04] pointer-events-none rounded-2xl" />
 
-        <div className="relative z-10 flex items-start gap-3">
+        {/* Official Rank Badge */}
+        {repo.official_rank && (
+          <div className="absolute -top-1 -left-1 h-8 w-8 bg-indigo-600 text-white flex items-center justify-center text-[10px] font-black rounded-br-2xl shadow-lg z-20">
+            #{repo.official_rank}
+          </div>
+        )}
+
+        {/* Velocity Badge (Trust Signal) */}
+        <div className="absolute top-4 right-4 flex items-center gap-2 z-20">
+          <a 
+            href={`/diagnostics/${repo.owner.login}/${repo.name}`}
+            className="px-2 py-1 rounded bg-white/5 border border-white/10 text-[8px] font-black text-slate-500 hover:text-indigo-400 hover:bg-white/10 transition-colors uppercase tracking-widest"
+            onClick={(e) => e.stopPropagation()}
+          >
+            DIAG
+          </a>
+          {repo.trending_velocity && (
+            <div className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/20 shadow-lg shadow-emerald-500/5">
+              <div className="h-1 w-1 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="text-[8px] font-black text-emerald-400 uppercase tracking-widest">{repo.trending_velocity}</span>
+            </div>
+          )}
+        </div>
+
+        <div className="relative z-10 flex items-start gap-3 mt-4">
           {/* Avatar */}
           <img
             src={repo.owner.avatar_url || `https://avatars.githubusercontent.com/u/0?v=4`}
@@ -95,7 +121,7 @@ export const RepoCardAdvanced: React.FC<{ repo?: Repo; skeleton?: boolean }> = (
             onError={(e) => { (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${repo.owner.login}&background=6366f1&color=fff&size=40` }}
           />
 
-          <div className="flex-1 min-w-0">
+          <div className="flex-1 min-w-0 pr-2">
             {/* Repo name */}
             <div className="font-semibold text-white text-sm leading-snug truncate">
               {repo.full_name ?? `${repo.owner.login}/${repo.name}`}
