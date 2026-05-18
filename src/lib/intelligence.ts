@@ -227,7 +227,12 @@ const SNAPSHOT_DIR = path.join(process.cwd(), 'data', 'snapshots')
 const MAX_SNAPSHOTS = 168
 
 function ensureDir(): void {
-  if (!fs.existsSync(SNAPSHOT_DIR)) fs.mkdirSync(SNAPSHOT_DIR, { recursive: true })
+  try {
+    if (!fs.existsSync(SNAPSHOT_DIR)) fs.mkdirSync(SNAPSHOT_DIR, { recursive: true })
+  } catch (e) {
+    // Gracefully catch read-only filesystem exceptions on platforms like Vercel
+    console.warn('[intelligence] Failed to ensure snapshot directory:', e)
+  }
 }
 
 function snapshotFile(fullName: string): string {
@@ -392,15 +397,22 @@ export function computeMomentum(
 // ─────────────────────────────────────────────────────────────────────────────
 
 export function getTopSignals(limit = 5): MomentumSignal[] {
-  ensureDir(); const files = fs.readdirSync(SNAPSHOT_DIR).filter(f => f.endsWith('.json'))
-  const signals: MomentumSignal[] = []
-  files.forEach(file => {
-    const fullName = file.replace('.json', '').replace('__', '/'), snapshots = readSnapshots(fullName)
-    if (snapshots.length < 2) return
-    const latest = snapshots[snapshots.length - 1], mom = computeMomentum(fullName, latest.rank, latest.stars)
-    signals.push(mom)
-  })
-  return signals.sort((a, b) => b.attentionScore - a.attentionScore).slice(0, limit)
+  ensureDir()
+  try {
+    if (!fs.existsSync(SNAPSHOT_DIR)) return []
+    const files = fs.readdirSync(SNAPSHOT_DIR).filter(f => f.endsWith('.json'))
+    const signals: MomentumSignal[] = []
+    files.forEach(file => {
+      const fullName = file.replace('.json', '').replace('__', '/'), snapshots = readSnapshots(fullName)
+      if (snapshots.length < 2) return
+      const latest = snapshots[snapshots.length - 1], mom = computeMomentum(fullName, latest.rank, latest.stars)
+      signals.push(mom)
+    })
+    return signals.sort((a, b) => b.attentionScore - a.attentionScore).slice(0, limit)
+  } catch (e) {
+    console.warn('[intelligence] getTopSignals failed:', e)
+    return []
+  }
 }
 
 export function getRepoDossier(fullName: string): RepoDossier {
@@ -427,21 +439,28 @@ export function getCalibrationReport(): CalibrationReport {
 }
 
 export function getSystemPulse(): SystemPulse {
-  ensureDir(); const files = fs.readdirSync(SNAPSHOT_DIR).filter(f => f.endsWith('.json'))
-  const pulse: SystemPulse = { computedAt: new Date().toISOString(), repoCount: files.length, classificationDist: {}, anomalyFrequency: {}, avgConfidence: 0, avgAttentionScore: 0, activeStructuralLeaders: [], freshnessScore: 0, predictionAccuracy: 0 }
-  let totalConf = 0, totalFresh = 0, totalAtt = 0
-  files.forEach(file => {
-    const fullName = file.replace('.json', '').replace('__', '/'), snapshots = readSnapshots(fullName)
-    if (snapshots.length === 0) return
-    const latest = snapshots[snapshots.length - 1], mom = computeMomentum(fullName, latest.rank, latest.stars)
-    const cls = String(mom.classification); pulse.classificationDist[cls] = (pulse.classificationDist[cls] || 0) + 1
-    mom.anomalies.forEach(a => { pulse.anomalyFrequency[a.flag] = (pulse.anomalyFrequency[a.flag] || 0) + 1 })
-    if (mom.classification === 'STRUCTURAL_LEADER') pulse.activeStructuralLeaders.push(fullName)
-    totalConf += mom.confidence.score; totalFresh += mom.confidence.breakdown.freshness; totalAtt += mom.attentionScore
-  })
-  pulse.avgConfidence = pulse.repoCount > 0 ? totalConf / pulse.repoCount : 0
-  pulse.freshnessScore = pulse.repoCount > 0 ? totalFresh / pulse.repoCount : 0
-  pulse.avgAttentionScore = pulse.repoCount > 0 ? totalAtt / pulse.repoCount : 0
+  ensureDir()
+  const pulse: SystemPulse = { computedAt: new Date().toISOString(), repoCount: 0, classificationDist: {}, anomalyFrequency: {}, avgConfidence: 0, avgAttentionScore: 0, activeStructuralLeaders: [], freshnessScore: 0, predictionAccuracy: 0 }
+  try {
+    if (!fs.existsSync(SNAPSHOT_DIR)) return pulse
+    const files = fs.readdirSync(SNAPSHOT_DIR).filter(f => f.endsWith('.json'))
+    pulse.repoCount = files.length
+    let totalConf = 0, totalFresh = 0, totalAtt = 0
+    files.forEach(file => {
+      const fullName = file.replace('.json', '').replace('__', '/'), snapshots = readSnapshots(fullName)
+      if (snapshots.length === 0) return
+      const latest = snapshots[snapshots.length - 1], mom = computeMomentum(fullName, latest.rank, latest.stars)
+      const cls = String(mom.classification); pulse.classificationDist[cls] = (pulse.classificationDist[cls] || 0) + 1
+      mom.anomalies.forEach(a => { pulse.anomalyFrequency[a.flag] = (pulse.anomalyFrequency[a.flag] || 0) + 1 })
+      if (mom.classification === 'STRUCTURAL_LEADER') pulse.activeStructuralLeaders.push(fullName)
+      totalConf += mom.confidence.score; totalFresh += mom.confidence.breakdown.freshness; totalAtt += mom.attentionScore
+    })
+    pulse.avgConfidence = pulse.repoCount > 0 ? totalConf / pulse.repoCount : 0
+    pulse.freshnessScore = pulse.repoCount > 0 ? totalFresh / pulse.repoCount : 0
+    pulse.avgAttentionScore = pulse.repoCount > 0 ? totalAtt / pulse.repoCount : 0
+  } catch (e) {
+    console.warn('[intelligence] getSystemPulse failed:', e)
+  }
   return pulse
 }
 
